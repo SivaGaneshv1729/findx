@@ -97,139 +97,256 @@ const NavBar = ({ currentTab, setCurrentTab }) => {
   );
 };
 
+// --- FIGMA REPLICA COMPONENTS ---
+
+const FigmaHero = ({ setCurrentTab }) => (
+  <section className="w-full bg-gradient-to-br from-[#E0F2FE] via-[#F3E8FF] to-[#FCE7F3] pt-24 pb-0 overflow-hidden relative">
+    {/* Ambient decorative blur orbs */}
+    <div className="absolute top-20 left-20 w-72 h-72 bg-purple-400/30 rounded-full blur-[80px]"></div>
+    <div className="absolute bottom-10 right-20 w-96 h-96 bg-blue-400/20 rounded-full blur-[100px]"></div>
+    
+    <div className="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-2 gap-10 items-center relative z-10">
+      <div className="flex flex-col gap-6 pb-24">
+        <h1 className="font-display-lg text-[64px] leading-[1.05] tracking-tight text-[#1A2530] drop-shadow-sm">
+          Your home to find, our comfort achieved
+        </h1>
+        <p className="font-body-md text-[#475569] max-w-md mt-2 leading-relaxed">
+          Search confidently with your trusted source of homes for sale or rent.
+        </p>
+        
+        <div className="flex gap-8 items-center mt-4 bg-white/40 backdrop-blur-md p-4 rounded-xl border border-white/60 shadow-lg w-fit">
+           <div className="flex flex-col gap-1">
+             <div className="flex gap-1 text-[#6366F1] text-[10px]">★★★★★</div>
+             <span className="text-[10px] font-bold text-[#475569] tracking-wide">Trustpilot</span>
+           </div>
+           <div className="flex flex-col gap-1">
+             <div className="flex gap-1 text-[#6366F1] text-[10px]">★★★★★</div>
+             <span className="text-[10px] font-bold text-[#475569] tracking-wide">Google</span>
+           </div>
+        </div>
+        
+        <div className="flex gap-4 mt-8">
+          <button onClick={() => setCurrentTab('plots')} className="bg-gradient-to-r from-[#6366F1] to-[#A855F7] text-white font-label-bold text-xs px-8 py-4 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all">
+            Search for real estate
+          </button>
+          <button className="bg-white/50 backdrop-blur-md border border-white text-[#1A2530] font-label-bold text-xs px-8 py-4 rounded-full hover:bg-white/80 transition-all shadow-sm">
+            Learn more
+          </button>
+        </div>
+      </div>
+      
+      <div className="relative w-full h-[600px] flex justify-center items-center">
+        <img className="absolute w-[120%] max-w-none object-contain drop-shadow-2xl animate-float" src="/images/3d_hero.png" alt="3D Floating Island" />
+        <div className="absolute bottom-12 right-12 bg-white/70 backdrop-blur-xl px-6 py-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/80 text-xs font-bold text-[#1A2530] flex items-center gap-2 animate-bounce-slow">
+          Discover properties <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const FigmaStats = () => (
+  <section className="w-full bg-white py-12 border-b border-[#F1F5F9]">
+    <div className="max-w-[1000px] mx-auto px-gutter grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-[#1A2530]">
+      <div className="flex flex-col">
+        <span className="font-display-lg text-3xl font-bold">340+</span>
+        <span className="font-caption text-[#64748B] text-[10px] mt-2">Visits over the last week</span>
+      </div>
+      <div className="flex flex-col">
+        <span className="font-display-lg text-3xl font-bold">500+</span>
+        <span className="font-caption text-[#64748B] text-[10px] mt-2">Properties listed for sale</span>
+      </div>
+      <div className="flex flex-col">
+        <span className="font-display-lg text-3xl font-bold">500+</span>
+        <span className="font-caption text-[#64748B] text-[10px] mt-2">Properties listed for rent</span>
+      </div>
+      <div className="flex flex-col">
+        <span className="font-display-lg text-3xl font-bold">340+</span>
+        <span className="font-caption text-[#64748B] text-[10px] mt-2">Satisfied clients over all</span>
+      </div>
+    </div>
+  </section>
+);
+
+const FigmaDiscover = () => (
+  <section className="w-full max-w-container-max mx-auto px-gutter py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+    <div className="w-full relative flex justify-center items-center">
+       <div className="absolute inset-0 bg-blue-400/20 rounded-full blur-[100px]"></div>
+       <img className="w-full h-auto object-contain drop-shadow-2xl animate-float relative z-10" src="/images/3d_discover.png" alt="3D Map Map" style={{ animationDelay: '1s' }} />
+    </div>
+    <div className="flex flex-col gap-6 pl-0 lg:pl-10 relative z-10">
+      <div className="inline-block px-4 py-2 bg-purple-100 text-purple-700 font-bold text-[10px] rounded-full tracking-widest uppercase w-fit">Next-Gen Search</div>
+      <h2 className="font-display-lg text-[44px] text-[#1A2530] leading-[1.1] tracking-tight max-w-sm">Discover our new way of searching</h2>
+      <p className="font-body-md text-[#475569] max-w-sm mt-2 text-sm leading-relaxed">
+        Experience real estate exploration in stunning 3D. Thoughtfully designed interactive layouts make it simple to compare options.
+      </p>
+      
+      <div className="flex gap-6 mt-4">
+         <div className="flex items-center gap-3 bg-white/60 backdrop-blur-md px-4 py-3 rounded-xl border border-white/60 shadow-sm">
+           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white shadow-lg">
+             <span className="material-symbols-outlined text-[16px]">view_in_ar</span>
+           </div>
+           <span className="font-label-bold text-xs text-[#1A2530]">3D Previews</span>
+         </div>
+         <div className="flex items-center gap-3 bg-white/60 backdrop-blur-md px-4 py-3 rounded-xl border border-white/60 shadow-sm">
+           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white shadow-lg">
+             <span className="material-symbols-outlined text-[16px]">verified_user</span>
+           </div>
+           <span className="font-label-bold text-xs text-[#1A2530]">Verified Lands</span>
+         </div>
+      </div>
+    </div>
+  </section>
+);
+
+const FigmaPropertyCard = ({ price, title, location, img, isNew }) => (
+  <div className="flex flex-col gap-4 group cursor-pointer bg-white/40 backdrop-blur-xl border border-white/60 p-4 rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_rgba(99,102,241,0.15)] transition-all duration-500 hover:-translate-y-2 relative">
+    <div className="relative w-full h-64 rounded-2xl overflow-hidden flex items-center justify-center bg-gradient-to-t from-slate-100 to-white">
+      <img className="w-[85%] h-auto object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-xl" src={img} alt={title} />
+      {isNew && (
+        <div className="absolute top-4 left-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-md uppercase tracking-wider">
+          Featured
+        </div>
+      )}
+      <div className="absolute top-4 right-4 bg-white/70 backdrop-blur-md p-2 rounded-full text-pink-500 flex items-center justify-center shadow-sm hover:scale-110 transition-transform">
+        <span className="material-symbols-outlined text-[16px] font-bold">favorite</span>
+      </div>
+    </div>
+    
+    <div className="flex flex-col gap-1 px-2">
+      <h3 className="font-display-lg text-2xl text-[#1A2530] font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#1A2530] to-[#6366F1]">{price}</h3>
+      <p className="font-label-bold text-[#1A2530] text-[15px] mt-1 leading-tight">{title}</p>
+      <p className="font-body-md text-[#64748B] text-xs flex items-center gap-1 mt-1"><span className="material-symbols-outlined text-[14px]">location_on</span>{location}</p>
+    </div>
+  </div>
+);
+
+const FigmaLocationGrid = ({ title, subtitle }) => (
+  <section className="w-full py-20 bg-white relative">
+    {/* Background styling for grid section */}
+    <div className="absolute inset-0 bg-gradient-to-b from-white to-[#F8FAFC]"></div>
+    
+    <div className="max-w-[1100px] mx-auto px-gutter flex flex-col gap-12 relative z-10">
+      <div className="flex flex-col items-center text-center">
+        <h2 className="font-display-lg text-[40px] text-[#1A2530] font-bold">{title}</h2>
+        <p className="font-body-md text-[#64748B] text-sm mt-2 max-w-md">{subtitle}</p>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+        <FigmaPropertyCard 
+          price="₹45 Lakhs" 
+          title="Premium Corner Plot Ready for Development" 
+          location="Diwancheruvu, Rajahmundry" 
+          img="/images/3d_plot1.png" 
+          isNew={true}
+        />
+        <FigmaPropertyCard 
+          price="₹60 Lakhs" 
+          title="Spacious Flat Land with Green Boundaries" 
+          location="Diwancheruvu, Rajahmundry" 
+          img="/images/3d_plot2.png" 
+        />
+        <FigmaPropertyCard 
+          price="₹35 Lakhs" 
+          title="Cozy Investment Plot in Prime Location" 
+          location="Diwancheruvu, Rajahmundry" 
+          img="/images/3d_plot3.png" 
+        />
+      </div>
+    </div>
+  </section>
+);
+
+const FigmaAppCTA = () => (
+  <section className="w-full bg-[#1A2530] py-24 relative overflow-hidden">
+    <div className="absolute top-0 right-0 w-96 h-96 bg-[#6366F1]/20 rounded-full blur-[120px]"></div>
+    
+    <div className="max-w-[1000px] mx-auto px-gutter flex flex-col md:flex-row items-center justify-between gap-16 relative z-10">
+      <div className="flex flex-col gap-6 max-w-md">
+        <div className="inline-block px-3 py-1.5 bg-white/10 backdrop-blur-md text-white font-bold text-[10px] rounded-full uppercase tracking-widest border border-white/20 w-fit">Mobile App</div>
+        <h2 className="font-display-lg text-[48px] text-white leading-[1.1] tracking-tight">
+          Experience FindMyPlot in 3D on your phone.
+        </h2>
+        <p className="font-body-md text-[#CBD5E1] text-[15px] leading-relaxed">
+          Navigate immersive 3D maps and explore verified real estate plots seamlessly from anywhere.
+        </p>
+        
+        <div className="flex gap-4 mt-4">
+           <button className="bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/20 text-white flex items-center gap-3 px-5 py-3 rounded-2xl transition-all shadow-lg">
+             <span className="material-symbols-outlined text-[28px]">apple</span>
+             <div className="flex flex-col text-left">
+               <span className="text-[9px] uppercase tracking-wider text-slate-300">Download on the</span>
+               <span className="text-sm font-bold leading-none">App Store</span>
+             </div>
+           </button>
+        </div>
+      </div>
+      
+      <div className="relative w-[300px] h-[400px] hidden md:block">
+        <div className="absolute right-4 top-0 w-[200px] h-[400px] bg-gradient-to-tr from-purple-500 to-indigo-500 rounded-[32px] rotate-[-5deg] shadow-[0_30px_60px_rgba(0,0,0,0.5)] border-4 border-white/20 z-10 flex flex-col p-2 animate-float">
+          <div className="w-20 h-5 bg-black rounded-full mx-auto mt-2"></div>
+          <div className="flex-1 bg-white/20 backdrop-blur-md mt-4 rounded-xl border border-white/20 m-2 flex flex-col gap-3 p-3">
+             <div className="w-full h-24 bg-white/30 rounded-lg"></div>
+             <div className="w-3/4 h-4 bg-white/40 rounded-full"></div>
+             <div className="w-1/2 h-4 bg-white/20 rounded-full"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+const FigmaTestimonialCard = ({ quote, author }) => (
+  <div className="bg-[#F8FAFC] p-8 rounded flex flex-col gap-4">
+    <div className="text-[#CBD5E1]">
+      <span className="font-display-lg text-5xl">"</span>
+    </div>
+    <h4 className="font-label-bold text-[#1A2530] text-sm">{author}</h4>
+    <p className="font-body-md text-[#64748B] text-xs leading-relaxed flex-1">
+      "{quote}"
+    </p>
+    <div className="flex gap-1 text-[#1A2530] text-xs mt-2">
+      ★★★★★
+    </div>
+  </div>
+);
+
+const FigmaTestimonials = () => (
+  <section className="w-full py-24 bg-white">
+    <div className="max-w-[1100px] mx-auto px-gutter flex flex-col gap-10">
+      <div className="flex flex-col gap-2">
+        <h2 className="font-display-lg text-[32px] text-[#1A2530] font-bold">Our testimonials</h2>
+        <p className="font-body-md text-[#64748B] text-sm">See what our clients have to say.</p>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <FigmaTestimonialCard 
+          author="Great experience!" 
+          quote="One of the best real estate agents I've worked with. He knew everything about the local market and helped me find a great property for an incredible price. Will totally recommend to friends and family."
+        />
+        <FigmaTestimonialCard 
+          author="Great selection!" 
+          quote="I was looking for an apartment for a while, but most agents I contacted just tried to sell me anything. Homerenters actually listened to my requirements and found the perfect spot in just a few days."
+        />
+        <FigmaTestimonialCard 
+          author="Highly recommend" 
+          quote="After a few bad experiences with other real estate agents, I am glad I found Homerenters. They are very transparent and supportive throughout the whole process."
+        />
+      </div>
+    </div>
+  </section>
+);
+
 // --- TAB 1: HOME PAGE ---
 const HomeTab = ({ setCurrentTab }) => (
-  <div className="w-full flex flex-col pt-16 bg-white overflow-hidden">
-    {/* Hero Section */}
-    <section className="w-full bg-primary pt-16 pb-24">
-      <div className="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-        <div className="flex flex-col gap-6 opacity-0 animate-fade-in-up">
-          <h1 className="font-display-lg text-5xl md:text-6xl lg:text-[72px] text-on-primary leading-[1.05] tracking-tight">
-            Your home to find, <br/>our comfort achieved
-          </h1>
-          <p className="font-body-lg text-inverse-primary max-w-lg mt-2 opacity-0 animate-fade-in-up [animation-delay:150ms]">
-            Search confidently with your trusted source of homes for sale or rent.
-          </p>
-          <div className="flex gap-8 items-center mt-2 opacity-0 animate-fade-in-up [animation-delay:300ms]">
-             <div className="flex flex-col gap-1">
-               <div className="flex gap-1 text-growth-vibrant text-sm">★★★★★</div>
-               <span className="text-xs font-bold text-inverse-primary uppercase tracking-wider">Trustpilot</span>
-             </div>
-             <div className="flex flex-col gap-1">
-               <div className="flex gap-1 text-growth-vibrant text-sm">★★★★★</div>
-               <span className="text-xs font-bold text-inverse-primary uppercase tracking-wider">Google</span>
-             </div>
-          </div>
-          <div className="flex gap-4 mt-6 opacity-0 animate-fade-in-up [animation-delay:450ms]">
-            <button onClick={() => setCurrentTab('plots')} className="bg-white text-primary font-label-bold px-8 py-4 rounded-sm hover:bg-gray-100 transition-colors shadow-lg">
-              Search for plots
-            </button>
-            <button className="bg-transparent border-2 border-white/30 text-on-primary font-label-bold px-8 py-4 rounded-sm hover:bg-white/10 transition-colors">
-              Learn more
-            </button>
-          </div>
-        </div>
-        <div className="relative w-full h-[450px] lg:h-[550px] rounded-bl-[80px] rounded-tr-[80px] overflow-hidden shadow-2xl opacity-0 animate-scale-in [animation-delay:200ms] border-4 border-white/10">
-          <img className="w-full h-full object-cover scale-105 hover:scale-100 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACl7uG8YErkwNr145vWcu5fUXcjuJVYfItejf78jwXqb1-tGv26rvSM_VRnj02YmB4m_Q8axDjLfvLWtnsLIzNMuI897MFH-A_r5NQv_aIVGRKCsHj_wmORJGTujxnon-suGRgUttYO96WboM09S2d9oGs9I5Q2qXsg2vX4PK8Aa5q9r45j9USy76Yi4PoKjisuyUVJ545V3GfhGBxBBGHTIquIZ4RokMrkABg876izKeCkr1r9lpdcW_X7gOqLxgxD6NK4xCj1SY" alt="Modern Home" />
-        </div>
-      </div>
-    </section>
-
-    {/* Stats */}
-    <section className="w-full border-y border-border-subtle py-10 my-10 bg-surface-bright">
-      <div className="max-w-container-max mx-auto px-gutter grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-border-subtle/50">
-        <div className="flex flex-col">
-          <span className="font-display-lg text-4xl text-primary font-bold">340+</span>
-          <span className="font-caption text-on-surface-variant uppercase mt-2 tracking-widest text-[10px]">Properties Sold</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="font-display-lg text-4xl text-primary font-bold">500+</span>
-          <span className="font-caption text-on-surface-variant uppercase mt-2 tracking-widest text-[10px]">Happy Clients</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="font-display-lg text-4xl text-primary font-bold">500+</span>
-          <span className="font-caption text-on-surface-variant uppercase mt-2 tracking-widest text-[10px]">Properties listed</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="font-display-lg text-4xl text-primary font-bold">340+</span>
-          <span className="font-caption text-on-surface-variant uppercase mt-2 tracking-widest text-[10px]">Awards Gained</span>
-        </div>
-      </div>
-    </section>
-
-    {/* Discover */}
-    <section className="w-full max-w-container-max mx-auto px-gutter py-20 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center hover-trigger group">
-      <div className="w-full h-[500px] rounded-[40px] overflow-hidden shadow-xl transform transition-transform duration-700 group-hover:scale-[1.02]">
-         <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0DVmrbUInv7gtZSeSra8tIwt7GOTKhCNgZhoVglRVe8dcx-EORSdMsrDca1JCTff8gVa7hxMzm-mRCQy-FCd5kHejaMTHiMvIUAkPaGQkduMSrlCVe-_HLevMUG3MqqSRryTAC0qwe8gVTocLmpXRHYx4PN3qxL5kPl2LToWpr4O0C77jaWkFEkiVrvBqGd7rcs36ocF5FDKnbTfLu8u9_B9eo9F7rM0C2NU98TDnAJ3PUfFwlkwUkskGLPrls4PK0o4b1OzNARE" alt="Building" />
-      </div>
-      <div className="flex flex-col gap-6">
-        <h2 className="font-display-lg text-5xl text-primary leading-[1.1] tracking-tight">Discover our new <br/>way of searching</h2>
-        <p className="font-body-md text-on-surface-variant max-w-md mt-4 text-lg">Thoughtfully designed layouts and transparent data make it simple to compare options and find the perfect property seamlessly.</p>
-        <div className="grid grid-cols-2 gap-6 mt-6">
-           <div className="flex gap-3 items-center">
-             <div className="bg-surface-muted p-2 rounded-full text-primary border border-border-subtle"><span className="material-symbols-outlined text-sm">verified_user</span></div>
-             <span className="font-label-bold text-sm">100% verified</span>
-           </div>
-           <div className="flex gap-3 items-center">
-             <div className="bg-surface-muted p-2 rounded-full text-primary border border-border-subtle"><span className="material-symbols-outlined text-sm">support_agent</span></div>
-             <span className="font-label-bold text-sm">24/7 Support</span>
-           </div>
-        </div>
-        <div className="mt-8 flex gap-4">
-          <button onClick={() => setCurrentTab('plots')} className="bg-primary text-on-primary font-label-bold px-8 py-4 rounded-sm hover:bg-primary-container shadow-md">Explore properties</button>
-        </div>
-      </div>
-    </section>
-
-    {/* Location Grids */}
-    <section className="w-full bg-surface-muted/30 py-20">
-      <div className="max-w-container-max mx-auto px-gutter flex flex-col gap-12">
-        <div className="text-center flex flex-col items-center">
-          <h2 className="font-display-lg text-4xl text-primary mb-3 tracking-tight">Based on your location</h2>
-          <p className="font-body-md text-on-surface-variant">Find the best properties near Diwancheruvu.</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="bg-white border border-border-subtle rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 group cursor-pointer" onClick={() => setCurrentTab('plots')}>
-              <div className="h-64 bg-surface-muted relative overflow-hidden">
-                 <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMckKuUjcVEaRFYX7sakFQn3DvUGY5OzCqtylQHiJBigQBuRljMfXpk23Hf4seVJuV1knracP_smq6iN7W8ZFQOaXJ1m0JoyjekFR9typtXuCUIs-0AsK2tjkhGFRYQ6SqNJLlCuAuhyx3PGuMqwuSrMzIshm5cSi7yvXH-gZZtR6q5FSMbiYf89gYod5XL0klpPpKk4F-hKUxdy-Wfb72LSXyurLtEmO8QEsbx7RLnlQ1k-sBmLn3LIaats2TwDxnG-JZRhirL-Q" alt="plot" />
-                 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-bold rounded shadow-sm text-primary">FEATURED</div>
-              </div>
-              <div className="p-6 flex flex-col gap-3">
-                <span className="font-display-lg text-2xl tracking-tight">₹45 Lakhs</span>
-                <span className="font-body-lg text-on-surface-variant font-medium">Emerald Greens Phase {i}</span>
-                <div className="flex gap-6 mt-4 pt-4 border-t border-border-subtle text-sm text-on-surface-variant font-medium">
-                  <div className="flex items-center gap-2"><span className="material-symbols-outlined text-sm">aspect_ratio</span> 200 Sq Yds</div>
-                  <div className="flex items-center gap-2"><span className="material-symbols-outlined text-sm">explore</span> East Facing</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    {/* App CTA */}
-    <section className="w-full max-w-container-max mx-auto px-gutter py-24">
-      <div className="bg-primary rounded-[40px] p-10 md:p-20 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden shadow-xl">
-        <div className="flex flex-col gap-6 max-w-xl relative z-10">
-          <h2 className="font-display-lg text-5xl text-on-primary leading-[1.1] tracking-tight">Check out findmyplot app too, don't miss it!</h2>
-          <p className="font-body-md text-inverse-primary text-lg mt-2">Stay updated with real-time property listings and connect with advisors on the go.</p>
-          <div className="flex gap-2 mt-6 bg-white p-2 rounded-lg shadow-sm">
-             <input type="email" placeholder="Your email address" className="flex-1 px-4 rounded border-none outline-none focus:ring-0 text-primary" />
-             <button className="bg-primary text-on-primary px-8 py-4 rounded-md font-label-bold hover:bg-primary-container shadow-md transition-colors">Subscribe</button>
-          </div>
-        </div>
-        <div className="hidden md:flex w-[280px] h-[380px] bg-white rounded-[40px] shadow-2xl relative rotate-[15deg] translate-x-10 transform-gpu z-10 flex-col p-4 border-8 border-white/10 animate-float">
-           <div className="w-16 h-1.5 bg-border-subtle mx-auto rounded-full mt-2 mb-8"></div>
-           <div className="flex-1 bg-surface-muted rounded-2xl p-4 flex flex-col gap-4 overflow-hidden">
-             <div className="h-24 bg-primary/10 rounded-xl w-full"></div>
-             <div className="h-6 bg-primary/20 rounded w-3/4"></div>
-             <div className="h-4 bg-primary/10 rounded w-1/2"></div>
-           </div>
-        </div>
-      </div>
-    </section>
+  <div className="w-full flex flex-col bg-white overflow-hidden">
+    <FigmaHero setCurrentTab={setCurrentTab} />
+    <FigmaStats />
+    <FigmaDiscover />
+    <FigmaLocationGrid title="Based on your location" subtitle="Find the best properties near you." />
+    <FigmaAppCTA />
+    <FigmaLocationGrid title="Latest updates & offers" subtitle="Stay ahead of the market with our latest deals." />
+    <FigmaTestimonials />
   </div>
 );
 
