@@ -1,24 +1,84 @@
 import React, { useState } from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
-const NavBar = () => (
+const plotsData = [
+  {
+    id: 1,
+    price: "₹45 Lakhs",
+    title: "Emerald Greens Phase II",
+    area: "200 Sq Yds",
+    facing: "East Facing",
+    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuC0DVmrbUInv7gtZSeSra8tIwt7GOTKhCNgZhoVglRVe8dcx-EORSdMsrDca1JCTff8gVa7hxMzm-mRCQy-FCd5kHejaMTHiMvIUAkPaGQkduMSrlCVe-_HLevMUG3MqqSRryTAC0qwe8gVTocLmpXRHYx4PN3qxL5kPl2LToWpr4O0C77jaWkFEkiVrvBqGd7rcs36ocF5FDKnbTfLu8u9_B9eo9F7rM0C2NU98TDnAJ3PUfFwlkwUkskGLPrls4PK0o4b1OzNARE",
+    badges: ["Drone-Verified", "GUDA Approved"],
+    coords: [17.0435, 81.8235]
+  },
+  {
+    id: 2,
+    price: "₹62 Lakhs",
+    title: "Sapphire Enclave",
+    area: "250 Sq Yds",
+    facing: "North Facing",
+    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuC_OxHSmXDCbv-JEVzFcdarxn-XSqw6g3cUvaGnoyvIFp2LLDV4sUg5p40nK1Ao4iHVENnsh9b1_-qY0qmbhZ-nG30IOknv4Tza1N8mODi3xiNZQXEPOdCBQJ5UM4djpQxxRh15uxOhBzRB6s_-OrfUjpBgaCJ5pgMkIHeuUPhACup7hxPvkBtipOyIMZnWbjrch-KiVDAnd02yMIF4aDNvfBRoQPt6qjHgwbDAMmAn1Qa8tvr5SNZkoDWB1QmT6-RDuWFAwpOCLtc",
+    badges: ["Drone-Verified", "Corner Plot"],
+    coords: [17.0410, 81.8200]
+  },
+  {
+    id: 3,
+    price: "₹35 Lakhs",
+    title: "GIET Corridor Plots",
+    area: "160 Sq Yds",
+    facing: "West Facing",
+    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBMckKuUjcVEaRFYX7sakFQn3DvUGY5OzCqtylQHiJBigQBuRljMfXpk23Hf4seVJuV1knracP_smq6iN7W8ZFQOaXJ1m0JoyjekFR9typtXuCUIs-0AsK2tjkhGFRYQ6SqNJLlCuAuhyx3PGuMqwuSrMzIshm5cSi7yvXH-gZZtR6q5FSMbiYf89gYod5XL0klpPpKk4F-hKUxdy-Wfb72LSXyurLtEmO8QEsbx7RLnlQ1k-sBmLn3LIaats2TwDxnG-JZRhirL-Q",
+    badges: ["Drone-Verified", "Ready to Build"],
+    coords: [17.0450, 81.8210]
+  },
+  {
+    id: 4,
+    price: "₹80 Lakhs",
+    title: "Royal Residency Plots",
+    area: "300 Sq Yds",
+    facing: "East Facing",
+    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCcqIfjDiZ5KjLtW_5x1K_ahNChnw9VWFiKa97EuMcsEhGW_UYXCAujWGlpSKFcLpVuIirNN9GcRcwtjuqhX-st8o6PVp_9hZ4dFb15cVsqXGVWWPgMUFRRs7rLR__z5T0gzqJFRPs7SQdvNmEJEd6F6cWgI1UtZBbB8d4gfGjzaxbOyZjsO8BmPVn_A-h2gMzhSqNmgLPKSkIflVdyU6ZgJ7Y25WMXk4Qs8yzOoj2DaiQ0V2HSROFYaQ-kwqNBfmNI6hZpNlN4hv8",
+    badges: ["Premium", "Highway Facing"],
+    coords: [17.0390, 81.8250]
+  }
+];
+
+const NavBar = ({ currentTab, setCurrentTab }) => (
   <nav className="bg-surface/90 backdrop-blur-xl dark:bg-navy-deep/90 shadow-sm border-b border-border-subtle/50 fixed top-0 w-full z-50 flex items-center px-gutter h-20 mx-auto transition-all">
     <div className="flex items-center justify-between max-w-container-max mx-auto w-full">
-      <div className="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed tracking-tight hover:scale-105 transition-transform cursor-pointer">
+      <div 
+        onClick={() => setCurrentTab('plots')}
+        className="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed tracking-tight hover:scale-105 transition-transform cursor-pointer"
+      >
         findmyplot
       </div>
       
-      {/* Centered Navigation */}
       <div className="hidden md:flex flex-1 items-center justify-center">
         <ul className="flex items-center gap-10">
           <li>
-            <a className="font-label-bold text-label-bold text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-1 scale-95 transition-transform hover:text-primary dark:hover:text-primary-fixed" href="#">
+            <button 
+              onClick={() => setCurrentTab('plots')}
+              className={`font-label-bold text-label-bold pb-1 transition-transform cursor-pointer ${
+                currentTab === 'plots' 
+                  ? 'text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed' 
+                  : 'text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed border-b-2 border-transparent hover:scale-95'
+              }`}
+            >
               Plots Search
-            </a>
+            </button>
           </li>
           <li>
-            <a className="font-label-bold text-label-bold text-on-surface-variant dark:text-on-primary-container hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">
-              Upcoming (Soon)
-            </a>
+            <button 
+              onClick={() => setCurrentTab('map')}
+              className={`font-label-bold text-label-bold pb-1 transition-transform cursor-pointer ${
+                currentTab === 'map' 
+                  ? 'text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed' 
+                  : 'text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed border-b-2 border-transparent hover:scale-95'
+              }`}
+            >
+              Map View
+            </button>
           </li>
           <li>
             <a className="font-label-bold text-label-bold text-on-surface-variant dark:text-on-primary-container hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">
@@ -83,46 +143,11 @@ const SearchFilterHero = () => (
 );
 
 const PlotListings = () => {
-  const plots = [
-    {
-      price: "₹45 Lakhs",
-      title: "Emerald Greens Phase II",
-      area: "200 Sq Yds",
-      facing: "East Facing",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuC0DVmrbUInv7gtZSeSra8tIwt7GOTKhCNgZhoVglRVe8dcx-EORSdMsrDca1JCTff8gVa7hxMzm-mRCQy-FCd5kHejaMTHiMvIUAkPaGQkduMSrlCVe-_HLevMUG3MqqSRryTAC0qwe8gVTocLmpXRHYx4PN3qxL5kPl2LToWpr4O0C77jaWkFEkiVrvBqGd7rcs36ocF5FDKnbTfLu8u9_B9eo9F7rM0C2NU98TDnAJ3PUfFwlkwUkskGLPrls4PK0o4b1OzNARE",
-      badges: ["Drone-Verified", "GUDA Approved"]
-    },
-    {
-      price: "₹62 Lakhs",
-      title: "Sapphire Enclave",
-      area: "250 Sq Yds",
-      facing: "North Facing",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuC_OxHSmXDCbv-JEVzFcdarxn-XSqw6g3cUvaGnoyvIFp2LLDV4sUg5p40nK1Ao4iHVENnsh9b1_-qY0qmbhZ-nG30IOknv4Tza1N8mODi3xiNZQXEPOdCBQJ5UM4djpQxxRh15uxOhBzRB6s_-OrfUjpBgaCJ5pgMkIHeuUPhACup7hxPvkBtipOyIMZnWbjrch-KiVDAnd02yMIF4aDNvfBRoQPt6qjHgwbDAMmAn1Qa8tvr5SNZkoDWB1QmT6-RDuWFAwpOCLtc",
-      badges: ["Drone-Verified", "Corner Plot"]
-    },
-    {
-      price: "₹35 Lakhs",
-      title: "GIET Corridor Plots",
-      area: "160 Sq Yds",
-      facing: "West Facing",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBMckKuUjcVEaRFYX7sakFQn3DvUGY5OzCqtylQHiJBigQBuRljMfXpk23Hf4seVJuV1knracP_smq6iN7W8ZFQOaXJ1m0JoyjekFR9typtXuCUIs-0AsK2tjkhGFRYQ6SqNJLlCuAuhyx3PGuMqwuSrMzIshm5cSi7yvXH-gZZtR6q5FSMbiYf89gYod5XL0klpPpKk4F-hKUxdy-Wfb72LSXyurLtEmO8QEsbx7RLnlQ1k-sBmLn3LIaats2TwDxnG-JZRhirL-Q",
-      badges: ["Drone-Verified", "Ready to Build"]
-    },
-    {
-      price: "₹80 Lakhs",
-      title: "Royal Residency Plots",
-      area: "300 Sq Yds",
-      facing: "East Facing",
-      img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCcqIfjDiZ5KjLtW_5x1K_ahNChnw9VWFiKa97EuMcsEhGW_UYXCAujWGlpSKFcLpVuIirNN9GcRcwtjuqhX-st8o6PVp_9hZ4dFb15cVsqXGVWWPgMUFRRs7rLR__z5T0gzqJFRPs7SQdvNmEJEd6F6cWgI1UtZBbB8d4gfGjzaxbOyZjsO8BmPVn_A-h2gMzhSqNmgLPKSkIflVdyU6ZgJ7Y25WMXk4Qs8yzOoj2DaiQ0V2HSROFYaQ-kwqNBfmNI6hZpNlN4hv8",
-      badges: ["Premium", "Highway Facing"]
-    }
-  ];
-
   return (
     <section className="w-full max-w-container-max mx-auto px-gutter py-12 md:py-16">
       <div className="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-border-subtle pb-6">
         <div>
-          <h2 className="font-headline-lg text-3xl text-primary mb-2">Available Plots (4)</h2>
+          <h2 className="font-headline-lg text-3xl text-primary mb-2">Available Plots ({plotsData.length})</h2>
           <p className="font-body-md text-on-surface-variant">Showing filtered premium plots based on your criteria.</p>
         </div>
         <div className="flex items-center gap-4 mt-4 md:mt-0">
@@ -137,8 +162,8 @@ const PlotListings = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {plots.map((listing, i) => (
-          <div key={i} className="group bg-surface-container-lowest border border-border-subtle rounded-2xl overflow-hidden hover:shadow-2xl hover:border-primary/30 transform hover:-translate-y-2 transition-all duration-300 flex flex-col cursor-pointer">
+        {plotsData.map((listing) => (
+          <div key={listing.id} className="group bg-surface-container-lowest border border-border-subtle rounded-2xl overflow-hidden hover:shadow-2xl hover:border-primary/30 transform hover:-translate-y-2 transition-all duration-300 flex flex-col cursor-pointer">
             <div className="relative h-56 overflow-hidden bg-surface-container">
               <img alt="Plot Listing" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={listing.img} />
               <div className="absolute inset-0 bg-gradient-to-t from-navy-deep/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -181,6 +206,34 @@ const PlotListings = () => {
   );
 };
 
+const MapView = () => {
+  // Center roughly at Diwancheruvu coordinates
+  const position = [17.0425, 81.8228];
+
+  return (
+    <div className="w-full relative z-20 pt-20 h-[calc(100vh-80px)]">
+      <MapContainer center={position} zoom={15} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {plotsData.map((plot) => (
+          <Marker key={plot.id} position={plot.coords}>
+            <Popup>
+              <div className="flex flex-col gap-2 p-1 min-w-[200px]">
+                <img src={plot.img} alt={plot.title} className="w-full h-24 object-cover rounded-md" />
+                <strong className="text-primary font-bold font-headline-md">{plot.price}</strong>
+                <span className="font-body-md font-semibold text-sm">{plot.title}</span>
+                <span className="text-xs text-on-surface-variant">{plot.area} &bull; {plot.facing}</span>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    </div>
+  );
+};
+
 const Footer = () => (
   <footer className="w-full py-12 px-gutter flex flex-col items-center text-center bg-tertiary border-t border-white/10">
     <div className="text-headline-md font-bold text-on-tertiary mb-6 opacity-90">
@@ -193,14 +246,23 @@ const Footer = () => (
 );
 
 function App() {
+  const [currentTab, setCurrentTab] = useState('plots');
+
   return (
     <div className="bg-background min-h-screen flex flex-col">
-      <NavBar />
-      <SearchFilterHero />
-      <main className="flex-1 relative z-20 -mt-8 bg-background rounded-t-[2.5rem] shadow-[0_-20px_40px_rgba(0,0,0,0.1)]">
-        <PlotListings />
-      </main>
-      <Footer />
+      <NavBar currentTab={currentTab} setCurrentTab={setCurrentTab} />
+      
+      {currentTab === 'plots' ? (
+        <>
+          <SearchFilterHero />
+          <main className="flex-1 relative z-20 -mt-8 bg-background rounded-t-[2.5rem] shadow-[0_-20px_40px_rgba(0,0,0,0.1)]">
+            <PlotListings />
+          </main>
+          <Footer />
+        </>
+      ) : (
+        <MapView />
+      )}
     </div>
   );
 }
