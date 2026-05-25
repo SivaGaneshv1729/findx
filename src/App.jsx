@@ -101,35 +101,37 @@ const NavBar = ({ currentTab, setCurrentTab }) => {
 const HomeTab = ({ setCurrentTab }) => (
   <div className="w-full flex flex-col pt-16 bg-white overflow-hidden">
     {/* Hero Section */}
-    <section className="w-full max-w-container-max mx-auto px-gutter pt-16 pb-12 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-      <div className="flex flex-col gap-6">
-        <h1 className="font-display-lg text-5xl md:text-6xl lg:text-[72px] text-primary leading-[1.05] tracking-tight">
-          Your home to find, <br/>our comfort achieved
-        </h1>
-        <p className="font-body-lg text-on-surface-variant max-w-lg mt-2">
-          Search confidently with your trusted source of homes for sale or rent.
-        </p>
-        <div className="flex gap-8 items-center mt-2">
-           <div className="flex flex-col gap-1">
-             <div className="flex gap-1 text-primary text-sm">★★★★★</div>
-             <span className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Trustpilot</span>
-           </div>
-           <div className="flex flex-col gap-1">
-             <div className="flex gap-1 text-primary text-sm">★★★★★</div>
-             <span className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Google</span>
-           </div>
+    <section className="w-full bg-primary pt-16 pb-24">
+      <div className="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        <div className="flex flex-col gap-6 opacity-0 animate-fade-in-up">
+          <h1 className="font-display-lg text-5xl md:text-6xl lg:text-[72px] text-on-primary leading-[1.05] tracking-tight">
+            Your home to find, <br/>our comfort achieved
+          </h1>
+          <p className="font-body-lg text-inverse-primary max-w-lg mt-2 opacity-0 animate-fade-in-up [animation-delay:150ms]">
+            Search confidently with your trusted source of homes for sale or rent.
+          </p>
+          <div className="flex gap-8 items-center mt-2 opacity-0 animate-fade-in-up [animation-delay:300ms]">
+             <div className="flex flex-col gap-1">
+               <div className="flex gap-1 text-growth-vibrant text-sm">★★★★★</div>
+               <span className="text-xs font-bold text-inverse-primary uppercase tracking-wider">Trustpilot</span>
+             </div>
+             <div className="flex flex-col gap-1">
+               <div className="flex gap-1 text-growth-vibrant text-sm">★★★★★</div>
+               <span className="text-xs font-bold text-inverse-primary uppercase tracking-wider">Google</span>
+             </div>
+          </div>
+          <div className="flex gap-4 mt-6 opacity-0 animate-fade-in-up [animation-delay:450ms]">
+            <button onClick={() => setCurrentTab('plots')} className="bg-white text-primary font-label-bold px-8 py-4 rounded-sm hover:bg-gray-100 transition-colors shadow-lg">
+              Search for plots
+            </button>
+            <button className="bg-transparent border-2 border-white/30 text-on-primary font-label-bold px-8 py-4 rounded-sm hover:bg-white/10 transition-colors">
+              Learn more
+            </button>
+          </div>
         </div>
-        <div className="flex gap-4 mt-6">
-          <button onClick={() => setCurrentTab('plots')} className="bg-primary text-on-primary font-label-bold px-8 py-4 rounded-sm hover:bg-primary-container transition-colors shadow-lg">
-            Search for plots
-          </button>
-          <button className="bg-transparent border-2 border-border-subtle text-primary font-label-bold px-8 py-4 rounded-sm hover:bg-surface-muted transition-colors">
-            Learn more
-          </button>
+        <div className="relative w-full h-[450px] lg:h-[550px] rounded-bl-[80px] rounded-tr-[80px] overflow-hidden shadow-2xl opacity-0 animate-scale-in [animation-delay:200ms] border-4 border-white/10">
+          <img className="w-full h-full object-cover scale-105 hover:scale-100 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACl7uG8YErkwNr145vWcu5fUXcjuJVYfItejf78jwXqb1-tGv26rvSM_VRnj02YmB4m_Q8axDjLfvLWtnsLIzNMuI897MFH-A_r5NQv_aIVGRKCsHj_wmORJGTujxnon-suGRgUttYO96WboM09S2d9oGs9I5Q2qXsg2vX4PK8Aa5q9r45j9USy76Yi4PoKjisuyUVJ545V3GfhGBxBBGHTIquIZ4RokMrkABg876izKeCkr1r9lpdcW_X7gOqLxgxD6NK4xCj1SY" alt="Modern Home" />
         </div>
-      </div>
-      <div className="relative w-full h-[450px] lg:h-[550px] rounded-bl-[80px] rounded-tr-[80px] overflow-hidden shadow-2xl">
-        <img className="w-full h-full object-cover scale-105 hover:scale-100 transition-transform duration-1000" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACl7uG8YErkwNr145vWcu5fUXcjuJVYfItejf78jwXqb1-tGv26rvSM_VRnj02YmB4m_Q8axDjLfvLWtnsLIzNMuI897MFH-A_r5NQv_aIVGRKCsHj_wmORJGTujxnon-suGRgUttYO96WboM09S2d9oGs9I5Q2qXsg2vX4PK8Aa5q9r45j9USy76Yi4PoKjisuyUVJ545V3GfhGBxBBGHTIquIZ4RokMrkABg876izKeCkr1r9lpdcW_X7gOqLxgxD6NK4xCj1SY" alt="Modern Home" />
       </div>
     </section>
 
@@ -156,8 +158,8 @@ const HomeTab = ({ setCurrentTab }) => (
     </section>
 
     {/* Discover */}
-    <section className="w-full max-w-container-max mx-auto px-gutter py-20 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-      <div className="w-full h-[500px] rounded-[40px] overflow-hidden shadow-xl">
+    <section className="w-full max-w-container-max mx-auto px-gutter py-20 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center hover-trigger group">
+      <div className="w-full h-[500px] rounded-[40px] overflow-hidden shadow-xl transform transition-transform duration-700 group-hover:scale-[1.02]">
          <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0DVmrbUInv7gtZSeSra8tIwt7GOTKhCNgZhoVglRVe8dcx-EORSdMsrDca1JCTff8gVa7hxMzm-mRCQy-FCd5kHejaMTHiMvIUAkPaGQkduMSrlCVe-_HLevMUG3MqqSRryTAC0qwe8gVTocLmpXRHYx4PN3qxL5kPl2LToWpr4O0C77jaWkFEkiVrvBqGd7rcs36ocF5FDKnbTfLu8u9_B9eo9F7rM0C2NU98TDnAJ3PUfFwlkwUkskGLPrls4PK0o4b1OzNARE" alt="Building" />
       </div>
       <div className="flex flex-col gap-6">
@@ -209,21 +211,21 @@ const HomeTab = ({ setCurrentTab }) => (
 
     {/* App CTA */}
     <section className="w-full max-w-container-max mx-auto px-gutter py-24">
-      <div className="bg-[#F8FAFC] border border-border-subtle rounded-[40px] p-10 md:p-20 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden shadow-sm">
+      <div className="bg-primary rounded-[40px] p-10 md:p-20 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden shadow-xl">
         <div className="flex flex-col gap-6 max-w-xl relative z-10">
-          <h2 className="font-display-lg text-5xl text-primary leading-[1.1] tracking-tight">Check out findmyplot app too, don't miss it!</h2>
-          <p className="font-body-md text-on-surface-variant text-lg mt-2">Stay updated with real-time property listings and connect with advisors on the go.</p>
-          <div className="flex gap-2 mt-6 bg-white p-2 rounded-lg border border-border-subtle shadow-sm">
-             <input type="email" placeholder="Your email address" className="flex-1 px-4 rounded border-none outline-none focus:ring-0 text-on-background" />
+          <h2 className="font-display-lg text-5xl text-on-primary leading-[1.1] tracking-tight">Check out findmyplot app too, don't miss it!</h2>
+          <p className="font-body-md text-inverse-primary text-lg mt-2">Stay updated with real-time property listings and connect with advisors on the go.</p>
+          <div className="flex gap-2 mt-6 bg-white p-2 rounded-lg shadow-sm">
+             <input type="email" placeholder="Your email address" className="flex-1 px-4 rounded border-none outline-none focus:ring-0 text-primary" />
              <button className="bg-primary text-on-primary px-8 py-4 rounded-md font-label-bold hover:bg-primary-container shadow-md transition-colors">Subscribe</button>
           </div>
         </div>
-        <div className="hidden md:flex w-[280px] h-[380px] bg-navy-deep rounded-[40px] shadow-2xl relative rotate-[15deg] translate-x-10 transform-gpu z-10 flex-col p-4 border-8 border-gray-800">
-           <div className="w-16 h-1.5 bg-white/20 mx-auto rounded-full mt-2 mb-8"></div>
-           <div className="flex-1 bg-surface rounded-2xl p-4 flex flex-col gap-4 overflow-hidden">
-             <div className="h-24 bg-surface-muted rounded-xl w-full"></div>
-             <div className="h-6 bg-surface-muted rounded w-3/4"></div>
-             <div className="h-4 bg-surface-muted rounded w-1/2"></div>
+        <div className="hidden md:flex w-[280px] h-[380px] bg-white rounded-[40px] shadow-2xl relative rotate-[15deg] translate-x-10 transform-gpu z-10 flex-col p-4 border-8 border-white/10 animate-float">
+           <div className="w-16 h-1.5 bg-border-subtle mx-auto rounded-full mt-2 mb-8"></div>
+           <div className="flex-1 bg-surface-muted rounded-2xl p-4 flex flex-col gap-4 overflow-hidden">
+             <div className="h-24 bg-primary/10 rounded-xl w-full"></div>
+             <div className="h-6 bg-primary/20 rounded w-3/4"></div>
+             <div className="h-4 bg-primary/10 rounded w-1/2"></div>
            </div>
         </div>
       </div>
