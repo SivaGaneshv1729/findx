@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
 // --- DATA ---
@@ -9,7 +9,7 @@ const plotsData = [
     title: "Emerald Greens Phase II",
     area: "200 Sq Yds",
     facing: "East Facing",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuC0DVmrbUInv7gtZSeSra8tIwt7GOTKhCNgZhoVglRVe8dcx-EORSdMsrDca1JCTff8gVa7hxMzm-mRCQy-FCd5kHejaMTHiMvIUAkPaGQkduMSrlCVe-_HLevMUG3MqqSRryTAC0qwe8gVTocLmpXRHYx4PN3qxL5kPl2LToWpr4O0C77jaWkFEkiVrvBqGd7rcs36ocF5FDKnbTfLu8u9_B9eo9F7rM0C2NU98TDnAJ3PUfFwlkwUkskGLPrls4PK0o4b1OzNARE",
+    img: "/images/3d_plot1.png",
     badges: ["Drone-Verified", "GUDA Approved"],
     coords: [17.0435, 81.8235]
   },
@@ -19,7 +19,7 @@ const plotsData = [
     title: "Sapphire Enclave",
     area: "250 Sq Yds",
     facing: "North Facing",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuC_OxHSmXDCbv-JEVzFcdarxn-XSqw6g3cUvaGnoyvIFp2LLDV4sUg5p40nK1Ao4iHVENnsh9b1_-qY0qmbhZ-nG30IOknv4Tza1N8mODi3xiNZQXEPOdCBQJ5UM4djpQxxRh15uxOhBzRB6s_-OrfUjpBgaCJ5pgMkIHeuUPhACup7hxPvkBtipOyIMZnWbjrch-KiVDAnd02yMIF4aDNvfBRoQPt6qjHgwbDAMmAn1Qa8tvr5SNZkoDWB1QmT6-RDuWFAwpOCLtc",
+    img: "/images/3d_plot2.png",
     badges: ["Drone-Verified", "Corner Plot"],
     coords: [17.0410, 81.8200]
   },
@@ -29,7 +29,7 @@ const plotsData = [
     title: "GIET Corridor Plots",
     area: "160 Sq Yds",
     facing: "West Facing",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBMckKuUjcVEaRFYX7sakFQn3DvUGY5OzCqtylQHiJBigQBuRljMfXpk23Hf4seVJuV1knracP_smq6iN7W8ZFQOaXJ1m0JoyjekFR9typtXuCUIs-0AsK2tjkhGFRYQ6SqNJLlCuAuhyx3PGuMqwuSrMzIshm5cSi7yvXH-gZZtR6q5FSMbiYf89gYod5XL0klpPpKk4F-hKUxdy-Wfb72LSXyurLtEmO8QEsbx7RLnlQ1k-sBmLn3LIaats2TwDxnG-JZRhirL-Q",
+    img: "/images/3d_plot3.png",
     badges: ["Drone-Verified", "Ready to Build"],
     coords: [17.0450, 81.8210]
   },
@@ -39,7 +39,7 @@ const plotsData = [
     title: "Royal Residency Plots",
     area: "300 Sq Yds",
     facing: "East Facing",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCcqIfjDiZ5KjLtW_5x1K_ahNChnw9VWFiKa97EuMcsEhGW_UYXCAujWGlpSKFcLpVuIirNN9GcRcwtjuqhX-st8o6PVp_9hZ4dFb15cVsqXGVWWPgMUFRRs7rLR__z5T0gzqJFRPs7SQdvNmEJEd6F6cWgI1UtZBbB8d4gfGjzaxbOyZjsO8BmPVn_A-h2gMzhSqNmgLPKSkIflVdyU6ZgJ7Y25WMXk4Qs8yzOoj2DaiQ0V2HSROFYaQ-kwqNBfmNI6hZpNlN4hv8",
+    img: "/images/3d_discover.png",
     badges: ["Premium", "Highway Facing"],
     coords: [17.0390, 81.8250]
   }
@@ -55,42 +55,48 @@ const NavBar = ({ currentTab, setCurrentTab }) => {
   ];
 
   return (
-    <nav className="bg-surface/90 backdrop-blur-xl dark:bg-navy-deep/90 shadow-sm border-b border-border-subtle/50 fixed top-0 w-full z-50 flex items-center px-gutter h-20 mx-auto transition-all">
-      <div className="flex items-center justify-between max-w-container-max mx-auto w-full">
+    <nav className="bg-white/80 backdrop-blur-xl border-b border-border-subtle fixed top-0 w-full z-50 h-20 transition-all">
+      <div className="flex items-center justify-between max-w-container-max mx-auto w-full px-gutter h-full">
         <div 
           onClick={() => setCurrentTab('home')}
-          className="text-headline-md font-headline-md font-bold text-primary dark:text-primary-fixed tracking-tight hover:scale-105 transition-transform cursor-pointer"
+          className="text-2xl font-black text-primary tracking-tighter hover:scale-105 transition-transform cursor-pointer flex items-center gap-1"
         >
-          findmyplot
+          findmyplot<span className="text-growth-vibrant">.</span>
         </div>
         
         <div className="hidden md:flex flex-1 items-center justify-center">
-          <ul className="flex items-center gap-8 lg:gap-12">
+          <ul className="flex items-center gap-10">
             {tabs.map((tab) => (
               <li key={tab.id}>
                 <button 
                   onClick={() => setCurrentTab(tab.id)}
-                  className={`font-label-bold text-label-bold pb-1 transition-all duration-300 cursor-pointer ${
+                  className={`text-[13px] font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer relative py-2 ${
                     currentTab === tab.id 
-                      ? 'text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed scale-105' 
-                      : 'text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed border-b-2 border-transparent hover:scale-95'
+                      ? 'text-primary' 
+                      : 'text-on-surface-variant hover:text-primary'
                   }`}
                 >
                   {tab.label}
+                  {currentTab === tab.id && (
+                    <span className="absolute bottom-0 left-0 w-full h-1 bg-growth-vibrant rounded-full animate-scale-in"></span>
+                  )}
                 </button>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="hidden md:flex items-center gap-stack-md">
-          <button className="font-label-bold text-label-bold bg-primary text-on-primary px-6 py-3 rounded-xl hover:bg-primary-container hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
-            Sign In
+        <div className="hidden md:flex items-center gap-6">
+          <button className="text-primary font-bold text-sm hover:text-growth-vibrant transition-colors">
+            Login
+          </button>
+          <button className="bg-primary text-white font-bold text-sm px-6 py-3 rounded-2xl hover:bg-growth-vibrant hover:text-primary transition-all shadow-lg hover:shadow-growth-vibrant/20">
+            Get Started
           </button>
         </div>
         
-        <button className="md:hidden text-primary p-2 hover:bg-primary/10 rounded-lg transition-colors">
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>menu</span>
+        <button className="md:hidden text-primary p-2">
+          <span className="material-symbols-outlined">menu</span>
         </button>
       </div>
     </nav>
@@ -100,45 +106,135 @@ const NavBar = ({ currentTab, setCurrentTab }) => {
 // --- FIGMA REPLICA COMPONENTS ---
 
 const FigmaHero = ({ setCurrentTab }) => (
-  <section className="w-full bg-gradient-to-br from-[#E0F2FE] via-[#F3E8FF] to-[#FCE7F3] pt-24 pb-0 overflow-hidden relative">
-    {/* Ambient decorative blur orbs */}
-    <div className="absolute top-20 left-20 w-72 h-72 bg-purple-400/30 rounded-full blur-[80px]"></div>
-    <div className="absolute bottom-10 right-20 w-96 h-96 bg-blue-400/20 rounded-full blur-[100px]"></div>
+  <section className="w-full bg-white pt-32 pb-20 overflow-hidden relative">
+    {/* Modern Background Elements */}
+    <div className="absolute inset-0 z-0">
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent"></div>
+      <div className="absolute top-[20%] right-[10%] w-[500px] h-[500px] bg-growth-vibrant/5 rounded-full blur-[120px]"></div>
+      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border-subtle to-transparent"></div>
+      
+      {/* Decorative Grid */}
+      <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(#0A1F44 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+    </div>
     
-    <div className="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-2 gap-10 items-center relative z-10">
-      <div className="flex flex-col gap-6 pb-24">
-        <h1 className="font-display-lg text-[64px] leading-[1.05] tracking-tight text-[#1A2530] drop-shadow-sm">
-          Your home to find, our comfort achieved
-        </h1>
-        <p className="font-body-md text-[#475569] max-w-md mt-2 leading-relaxed">
-          Search confidently with your trusted source of homes for sale or rent.
-        </p>
-        
-        <div className="flex gap-8 items-center mt-4 bg-white/40 backdrop-blur-md p-4 rounded-xl border border-white/60 shadow-lg w-fit">
-           <div className="flex flex-col gap-1">
-             <div className="flex gap-1 text-[#6366F1] text-[10px]">★★★★★</div>
-             <span className="text-[10px] font-bold text-[#475569] tracking-wide">Trustpilot</span>
-           </div>
-           <div className="flex flex-col gap-1">
-             <div className="flex gap-1 text-[#6366F1] text-[10px]">★★★★★</div>
-             <span className="text-[10px] font-bold text-[#475569] tracking-wide">Google</span>
-           </div>
+    <div className="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-12 gap-16 items-center relative z-10">
+      <div className="lg:col-span-7 flex flex-col gap-8 animate-fade-in-up">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-growth-vibrant/10 border border-growth-vibrant/20 text-growth-vibrant text-[12px] font-bold uppercase tracking-wider w-fit">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-growth-vibrant opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-growth-vibrant"></span>
+          </span>
+          Premium Verified Plots
         </div>
         
-        <div className="flex gap-4 mt-8">
-          <button onClick={() => setCurrentTab('plots')} className="bg-gradient-to-r from-[#6366F1] to-[#A855F7] text-white font-label-bold text-xs px-8 py-4 rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all">
-            Search for real estate
+        <h1 className="font-display-lg text-[56px] lg:text-[72px] leading-[1.05] tracking-tight text-primary">
+          Invest in land, <br />
+          <span className="text-growth-vibrant italic">secure</span> your future.
+        </h1>
+        
+        <p className="font-body-lg text-on-surface-variant max-w-xl text-lg lg:text-xl leading-relaxed">
+          Connect with expertly curated gated communities and premium plots in prime locations. We bridge the gap between land potential and high-value investment.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 mt-4">
+          <div className="flex-1 max-w-md relative group">
+            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+              <span className="material-symbols-outlined text-outline group-focus-within:text-primary transition-colors">location_on</span>
+            </div>
+            <input 
+              type="text" 
+              placeholder="Search by location (e.g. Diwancheruvu)" 
+              className="w-full pl-12 pr-4 py-4 rounded-2xl border border-border-subtle bg-white shadow-sm focus:ring-2 focus:ring-primary/10 focus:border-primary outline-none transition-all"
+            />
+          </div>
+          <button 
+            onClick={() => setCurrentTab('plots')} 
+            className="bg-primary text-on-primary font-label-bold px-8 py-4 rounded-2xl shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2 whitespace-nowrap"
+          >
+            Find Plots
+            <span className="material-symbols-outlined text-[20px]">search</span>
           </button>
-          <button className="bg-white/50 backdrop-blur-md border border-white text-[#1A2530] font-label-bold text-xs px-8 py-4 rounded-full hover:bg-white/80 transition-all shadow-sm">
-            Learn more
-          </button>
+        </div>
+
+        <div className="flex items-center gap-8 mt-4">
+          <div className="flex -space-x-3">
+            {[1,2,3,4].map(i => (
+              <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-surface-variant flex items-center justify-center text-[10px] font-bold text-primary shadow-sm overflow-hidden">
+                <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5"></div>
+              </div>
+            ))}
+            <div className="w-10 h-10 rounded-full border-2 border-white bg-growth-vibrant flex items-center justify-center text-[10px] font-bold text-white shadow-sm">
+              10k+
+            </div>
+          </div>
+          <div className="h-8 w-px bg-border-subtle"></div>
+          <div className="flex flex-col">
+            <div className="flex gap-1 text-growth-vibrant text-[12px]">★★★★★</div>
+            <span className="text-[11px] font-bold text-on-surface-variant/70 uppercase tracking-widest">Trusted by 10,000+ Families</span>
+          </div>
         </div>
       </div>
       
-      <div className="relative w-full h-[600px] flex justify-center items-center">
-        <img className="absolute w-[120%] max-w-none object-contain drop-shadow-2xl animate-float" src="/images/3d_hero.png" alt="3D Floating Island" />
-        <div className="absolute bottom-12 right-12 bg-white/70 backdrop-blur-xl px-6 py-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/80 text-xs font-bold text-[#1A2530] flex items-center gap-2 animate-bounce-slow">
-          Discover properties <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+      <div className="lg:col-span-5 relative animate-scale-in">
+        <div className="relative aspect-[4/5] w-full rounded-[40px] overflow-hidden bg-primary shadow-2xl">
+          {/* Instead of a useless image, we use a sophisticated UI composition */}
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1500382017468-9049fee74a62?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-40 mix-blend-overlay"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-transparent"></div>
+          
+          <div className="absolute inset-0 p-8 flex flex-col justify-end gap-6">
+            <div className="glass-panel rounded-3xl p-6 border border-white/10 shadow-2xl">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <span className="text-growth-vibrant text-[10px] font-bold uppercase tracking-widest mb-1 block">Featured Listing</span>
+                  <h3 className="text-white text-xl font-bold">Sunrise Valley Phase II</h3>
+                </div>
+                <div className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-lg border border-white/20 text-white text-[10px] font-bold">
+                  Plot ID: SV-042
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="flex flex-col gap-1">
+                  <span className="text-white/50 text-[10px] uppercase">Starting from</span>
+                  <span className="text-white text-lg font-bold">₹45 Lakhs</span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span className="text-white/50 text-[10px] uppercase">Location</span>
+                  <span className="text-white text-lg font-bold">Diwancheruvu</span>
+                </div>
+              </div>
+              
+              <button className="w-full py-3 rounded-xl bg-growth-vibrant text-primary font-bold text-sm hover:scale-[1.02] transition-transform flex items-center justify-center gap-2">
+                View Details
+                <span className="material-symbols-outlined text-[16px]">arrow_outward</span>
+              </button>
+            </div>
+          </div>
+          
+          {/* Floating UI Elements */}
+          <div className="absolute top-12 -right-8 glass-panel p-4 rounded-2xl border border-white/20 shadow-xl animate-float">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-growth-vibrant/20 flex items-center justify-center">
+                <span className="material-symbols-outlined text-growth-vibrant">verified</span>
+              </div>
+              <div>
+                <p className="text-white text-[12px] font-bold">Verified Land</p>
+                <p className="text-white/60 text-[10px]">GUDA Approved</p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="absolute top-[30%] -left-8 glass-panel p-4 rounded-2xl border border-white/20 shadow-xl animate-float" style={{ animationDelay: '1s' }}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                <span className="material-symbols-outlined text-white">trending_up</span>
+              </div>
+              <div>
+                <p className="text-white text-[12px] font-bold">+12% YoY</p>
+                <p className="text-white/60 text-[10px]">Price Growth</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -146,77 +242,152 @@ const FigmaHero = ({ setCurrentTab }) => (
 );
 
 const FigmaStats = () => (
-  <section className="w-full bg-white py-12 border-b border-[#F1F5F9]">
-    <div className="max-w-[1000px] mx-auto px-gutter grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-[#1A2530]">
-      <div className="flex flex-col">
-        <span className="font-display-lg text-3xl font-bold">340+</span>
-        <span className="font-caption text-[#64748B] text-[10px] mt-2">Visits over the last week</span>
-      </div>
-      <div className="flex flex-col">
-        <span className="font-display-lg text-3xl font-bold">500+</span>
-        <span className="font-caption text-[#64748B] text-[10px] mt-2">Properties listed for sale</span>
-      </div>
-      <div className="flex flex-col">
-        <span className="font-display-lg text-3xl font-bold">500+</span>
-        <span className="font-caption text-[#64748B] text-[10px] mt-2">Properties listed for rent</span>
-      </div>
-      <div className="flex flex-col">
-        <span className="font-display-lg text-3xl font-bold">340+</span>
-        <span className="font-caption text-[#64748B] text-[10px] mt-2">Satisfied clients over all</span>
-      </div>
+  <section className="w-full bg-primary py-20 relative overflow-hidden">
+    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
+    <div className="max-w-container-max mx-auto px-gutter grid grid-cols-2 md:grid-cols-4 gap-12 relative z-10">
+      {[
+        { label: 'Weekly Active Users', value: '3.4k+' },
+        { label: 'Verified Plots Listed', value: '850+' },
+        { label: 'Successful Investments', value: '1.2k+' },
+        { label: 'Happy Families', value: '10k+' }
+      ].map((stat, i) => (
+        <div key={i} className="flex flex-col items-center md:items-start text-center md:text-left">
+          <span className="font-display-lg text-4xl lg:text-5xl font-bold text-white mb-2">{stat.value}</span>
+          <span className="text-growth-vibrant text-[12px] font-bold uppercase tracking-widest">{stat.label}</span>
+        </div>
+      ))}
     </div>
   </section>
 );
 
 const FigmaDiscover = () => (
-  <section className="w-full max-w-container-max mx-auto px-gutter py-24 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-    <div className="w-full relative flex justify-center items-center">
-       <div className="absolute inset-0 bg-blue-400/20 rounded-full blur-[100px]"></div>
-       <img className="w-full h-auto object-contain drop-shadow-2xl animate-float relative z-10" src="/images/3d_discover.png" alt="3D Map Map" style={{ animationDelay: '1s' }} />
-    </div>
-    <div className="flex flex-col gap-6 pl-0 lg:pl-10 relative z-10">
-      <div className="inline-block px-4 py-2 bg-purple-100 text-purple-700 font-bold text-[10px] rounded-full tracking-widest uppercase w-fit">Next-Gen Search</div>
-      <h2 className="font-display-lg text-[44px] text-[#1A2530] leading-[1.1] tracking-tight max-w-sm">Discover our new way of searching</h2>
-      <p className="font-body-md text-[#475569] max-w-sm mt-2 text-sm leading-relaxed">
-        Experience real estate exploration in stunning 3D. Thoughtfully designed interactive layouts make it simple to compare options.
-      </p>
+  <section className="w-full py-24 bg-white relative overflow-hidden">
+    <div className="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      <div className="relative order-2 lg:order-1">
+        <div className="absolute inset-0 bg-growth-vibrant/5 rounded-full blur-[100px] -z-10"></div>
+        
+        {/* Modern Feature Composition */}
+        <div className="grid grid-cols-2 gap-4 relative">
+          <div className="space-y-4">
+            <div className="bg-surface-muted p-6 rounded-[32px] border border-border-subtle hover:border-growth-vibrant/30 transition-colors group">
+              <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-primary">analytics</span>
+              </div>
+              <h4 className="font-bold text-primary mb-2">Market Insights</h4>
+              <p className="text-[12px] text-on-surface-variant leading-relaxed">Real-time price trends and growth projections for every locality.</p>
+            </div>
+            <div className="bg-primary p-6 rounded-[32px] text-white">
+              <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined text-growth-vibrant">verified</span>
+              </div>
+              <h4 className="font-bold mb-2 text-white">Drone Verified</h4>
+              <p className="text-[12px] text-white/70 leading-relaxed">Every plot is physically verified and recorded via drone surveys.</p>
+            </div>
+          </div>
+          <div className="space-y-4 pt-12">
+            <div className="bg-growth-vibrant p-6 rounded-[32px] text-primary">
+              <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined text-primary">map</span>
+              </div>
+              <h4 className="font-bold mb-2">3D Interactive Maps</h4>
+              <p className="text-[12px] text-primary/80 leading-relaxed">Explore plot boundaries and surroundings in immersive 3D.</p>
+            </div>
+            <div className="bg-surface-muted p-6 rounded-[32px] border border-border-subtle hover:border-growth-vibrant/30 transition-colors group">
+              <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-primary">gavel</span>
+              </div>
+              <h4 className="font-bold text-primary mb-2">Legal Clarity</h4>
+              <p className="text-[12px] text-on-surface-variant leading-relaxed">Instant access to GUDA/LP approvals and ownership documents.</p>
+            </div>
+          </div>
+        </div>
+      </div>
       
-      <div className="flex gap-6 mt-4">
-         <div className="flex items-center gap-3 bg-white/60 backdrop-blur-md px-4 py-3 rounded-xl border border-white/60 shadow-sm">
-           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white shadow-lg">
-             <span className="material-symbols-outlined text-[16px]">view_in_ar</span>
-           </div>
-           <span className="font-label-bold text-xs text-[#1A2530]">3D Previews</span>
-         </div>
-         <div className="flex items-center gap-3 bg-white/60 backdrop-blur-md px-4 py-3 rounded-xl border border-white/60 shadow-sm">
-           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white shadow-lg">
-             <span className="material-symbols-outlined text-[16px]">verified_user</span>
-           </div>
-           <span className="font-label-bold text-xs text-[#1A2530]">Verified Lands</span>
-         </div>
+      <div className="flex flex-col gap-8 order-1 lg:order-2">
+        <div className="inline-block px-4 py-2 bg-primary/5 text-primary font-bold text-[10px] rounded-full tracking-widest uppercase w-fit">
+          Technology Driven
+        </div>
+        <h2 className="font-display-lg text-[48px] lg:text-[56px] text-primary leading-[1.05] tracking-tight">
+          A new era of land <span className="text-growth-vibrant">discovery</span>.
+        </h2>
+        <p className="font-body-md text-on-surface-variant text-lg leading-relaxed">
+          Forget traditional, opaque land deals. Our platform uses advanced geospatial tech and physical verification to bring absolute transparency to your investment journey.
+        </p>
+        
+        <div className="space-y-6 mt-4">
+          {[
+            { icon: 'target', title: 'Precision Search', desc: 'Filter by facing, road width, and proximity to landmarks.' },
+            { icon: 'shield_check', title: 'Secure Transactions', desc: 'Direct connections with verified sellers and developers.' }
+          ].map((item, i) => (
+            <div key={i} className="flex gap-4">
+              <div className="w-6 h-6 rounded-full bg-growth-vibrant/20 flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-[16px] text-growth-vibrant font-bold">{item.icon}</span>
+              </div>
+              <div>
+                <h5 className="font-bold text-primary text-sm">{item.title}</h5>
+                <p className="text-sm text-on-surface-variant">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <button className="flex items-center gap-3 text-primary font-bold text-sm group mt-4">
+          Explore our technology 
+          <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        </button>
       </div>
     </div>
   </section>
 );
 
 const FigmaPropertyCard = ({ price, title, location, img, isNew }) => (
-  <div className="flex flex-col gap-4 group cursor-pointer bg-white/40 backdrop-blur-xl border border-white/60 p-4 rounded-3xl shadow-[0_10px_30px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_40px_rgba(99,102,241,0.15)] transition-all duration-500 hover:-translate-y-2 relative">
-    <div className="relative w-full h-64 rounded-2xl overflow-hidden flex items-center justify-center bg-gradient-to-t from-slate-100 to-white">
-      <img className="w-[85%] h-auto object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-xl" src={img} alt={title} />
+  <div className="group bg-white rounded-[32px] border border-border-subtle hover:border-growth-vibrant/30 transition-all duration-500 hover:shadow-[0_20px_50px_rgba(10,31,68,0.1)] overflow-hidden flex flex-col cursor-pointer">
+    <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
+      <img 
+        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+        src={img} 
+        alt={title} 
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      
       {isNew && (
-        <div className="absolute top-4 left-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-md uppercase tracking-wider">
+        <div className="absolute top-4 left-4 bg-growth-vibrant text-primary text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg uppercase tracking-wider">
           Featured
         </div>
       )}
-      <div className="absolute top-4 right-4 bg-white/70 backdrop-blur-md p-2 rounded-full text-pink-500 flex items-center justify-center shadow-sm hover:scale-110 transition-transform">
-        <span className="material-symbols-outlined text-[16px] font-bold">favorite</span>
+      
+      <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md p-2 rounded-full text-primary hover:bg-growth-vibrant hover:text-white transition-all shadow-lg scale-90 group-hover:scale-100">
+        <span className="material-symbols-outlined text-[20px]">favorite</span>
       </div>
     </div>
     
-    <div className="flex flex-col gap-1 px-2">
-      <h3 className="font-display-lg text-2xl text-[#1A2530] font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#1A2530] to-[#6366F1]">{price}</h3>
-      <p className="font-label-bold text-[#1A2530] text-[15px] mt-1 leading-tight">{title}</p>
-      <p className="font-body-md text-[#64748B] text-xs flex items-center gap-1 mt-1"><span className="material-symbols-outlined text-[14px]">location_on</span>{location}</p>
+    <div className="p-6 flex flex-col gap-4">
+      <div className="flex justify-between items-start">
+        <h3 className="font-display-lg text-2xl text-primary font-bold">{price}</h3>
+        <div className="flex items-center gap-1 text-growth-vibrant bg-growth-vibrant/10 px-2 py-0.5 rounded text-[10px] font-bold">
+          <span className="material-symbols-outlined text-[12px]">verified</span>
+          VERIFIED
+        </div>
+      </div>
+      
+      <div>
+        <p className="font-bold text-primary text-base line-clamp-1 group-hover:text-growth-vibrant transition-colors">{title}</p>
+        <p className="text-on-surface-variant text-sm flex items-center gap-1 mt-1 font-medium">
+          <span className="material-symbols-outlined text-[16px] text-growth-vibrant">location_on</span>
+          {location}
+        </p>
+      </div>
+      
+      <div className="flex gap-4 pt-4 border-t border-border-subtle mt-2">
+        <div className="flex items-center gap-2 text-on-surface-variant">
+          <span className="material-symbols-outlined text-[18px] opacity-40">square_foot</span>
+          <span className="text-[12px] font-bold">200 SqYd</span>
+        </div>
+        <div className="flex items-center gap-2 text-on-surface-variant">
+          <span className="material-symbols-outlined text-[18px] opacity-40">explore</span>
+          <span className="text-[12px] font-bold">East Facing</span>
+        </div>
+      </div>
     </div>
   </div>
 );
@@ -224,12 +395,12 @@ const FigmaPropertyCard = ({ price, title, location, img, isNew }) => (
 const FigmaLocationGrid = ({ title, subtitle }) => (
   <section className="w-full py-20 bg-white relative">
     {/* Background styling for grid section */}
-    <div className="absolute inset-0 bg-gradient-to-b from-white to-[#F8FAFC]"></div>
+    <div className="absolute inset-0 bg-gradient-to-b from-white to-surface-muted"></div>
     
     <div className="max-w-[1100px] mx-auto px-gutter flex flex-col gap-12 relative z-10">
       <div className="flex flex-col items-center text-center">
-        <h2 className="font-display-lg text-[40px] text-[#1A2530] font-bold">{title}</h2>
-        <p className="font-body-md text-[#64748B] text-sm mt-2 max-w-md">{subtitle}</p>
+        <h2 className="font-display-lg text-[40px] text-primary font-bold">{title}</h2>
+        <p className="font-body-md text-on-surface-variant text-sm mt-2 max-w-md">{subtitle}</p>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
@@ -258,38 +429,58 @@ const FigmaLocationGrid = ({ title, subtitle }) => (
 );
 
 const FigmaAppCTA = () => (
-  <section className="w-full bg-[#1A2530] py-24 relative overflow-hidden">
-    <div className="absolute top-0 right-0 w-96 h-96 bg-[#6366F1]/20 rounded-full blur-[120px]"></div>
+  <section className="w-full bg-primary py-32 relative overflow-hidden">
+    <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-growth-vibrant/5 rounded-full blur-[150px]"></div>
+    <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(white 1px, transparent 1px)', backgroundSize: '60px 60px' }}></div>
     
-    <div className="max-w-[1000px] mx-auto px-gutter flex flex-col md:flex-row items-center justify-between gap-16 relative z-10">
-      <div className="flex flex-col gap-6 max-w-md">
-        <div className="inline-block px-3 py-1.5 bg-white/10 backdrop-blur-md text-white font-bold text-[10px] rounded-full uppercase tracking-widest border border-white/20 w-fit">Mobile App</div>
-        <h2 className="font-display-lg text-[48px] text-white leading-[1.1] tracking-tight">
-          Experience FindMyPlot in 3D on your phone.
+    <div className="max-w-container-max mx-auto px-gutter grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
+      <div className="flex flex-col gap-8 max-w-xl">
+        <div className="inline-block px-4 py-2 bg-white/5 text-white font-bold text-[10px] rounded-full uppercase tracking-widest border border-white/10 w-fit">Mobile Experience</div>
+        <h2 className="font-display-lg text-[48px] lg:text-[64px] text-white leading-[1.05] tracking-tight">
+          Your property search, <span className="text-growth-vibrant">portable</span>.
         </h2>
-        <p className="font-body-md text-[#CBD5E1] text-[15px] leading-relaxed">
-          Navigate immersive 3D maps and explore verified real estate plots seamlessly from anywhere.
+        <p className="font-body-md text-white/60 text-lg leading-relaxed">
+          Take the power of 3D property exploration wherever you go. Our mobile app provides real-time notifications for price drops and new verified listings.
         </p>
         
-        <div className="flex gap-4 mt-4">
-           <button className="bg-white/10 backdrop-blur-md hover:bg-white/20 border border-white/20 text-white flex items-center gap-3 px-5 py-3 rounded-2xl transition-all shadow-lg">
-             <span className="material-symbols-outlined text-[28px]">apple</span>
+        <div className="flex flex-wrap gap-4 mt-4">
+           <button className="bg-white text-primary hover:bg-growth-vibrant hover:text-white flex items-center gap-4 px-8 py-4 rounded-2xl transition-all shadow-xl font-bold cursor-pointer group">
+             <span className="material-symbols-outlined text-[32px]">apple</span>
              <div className="flex flex-col text-left">
-               <span className="text-[9px] uppercase tracking-wider text-slate-300">Download on the</span>
-               <span className="text-sm font-bold leading-none">App Store</span>
+               <span className="text-[10px] uppercase tracking-wider opacity-60">Get it on</span>
+               <span className="text-base leading-none">App Store</span>
+             </div>
+           </button>
+           <button className="bg-white/5 border border-white/10 text-white hover:bg-white/10 flex items-center gap-4 px-8 py-4 rounded-2xl transition-all shadow-xl font-bold cursor-pointer group">
+             <span className="material-symbols-outlined text-[32px]">play_arrow</span>
+             <div className="flex flex-col text-left">
+               <span className="text-[10px] uppercase tracking-wider opacity-60">Get it on</span>
+               <span className="text-base leading-none">Google Play</span>
              </div>
            </button>
         </div>
       </div>
       
-      <div className="relative w-[300px] h-[400px] hidden md:block">
-        <div className="absolute right-4 top-0 w-[200px] h-[400px] bg-gradient-to-tr from-purple-500 to-indigo-500 rounded-[32px] rotate-[-5deg] shadow-[0_30px_60px_rgba(0,0,0,0.5)] border-4 border-white/20 z-10 flex flex-col p-2 animate-float">
-          <div className="w-20 h-5 bg-black rounded-full mx-auto mt-2"></div>
-          <div className="flex-1 bg-white/20 backdrop-blur-md mt-4 rounded-xl border border-white/20 m-2 flex flex-col gap-3 p-3">
-             <div className="w-full h-24 bg-white/30 rounded-lg"></div>
-             <div className="w-3/4 h-4 bg-white/40 rounded-full"></div>
-             <div className="w-1/2 h-4 bg-white/20 rounded-full"></div>
-          </div>
+      <div className="relative flex justify-center items-center">
+        {/* Subtle, abstract representation of mobile technology instead of a literal phone image */}
+        <div className="relative w-[320px] h-[600px] rounded-[60px] border-[8px] border-white/10 bg-navy-deep overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.5)]">
+           <div className="absolute top-0 inset-x-0 h-8 bg-white/5 flex justify-center items-end pb-2">
+             <div className="w-20 h-1 bg-white/20 rounded-full"></div>
+           </div>
+           <div className="p-6 pt-12 space-y-6">
+              <div className="w-full h-40 rounded-3xl bg-growth-vibrant/20 border border-growth-vibrant/30 animate-pulse"></div>
+              <div className="space-y-3">
+                <div className="w-2/3 h-4 rounded-full bg-white/20"></div>
+                <div className="w-full h-4 rounded-full bg-white/10"></div>
+                <div className="w-full h-4 rounded-full bg-white/10"></div>
+              </div>
+              <div className="grid grid-cols-2 gap-4 pt-4">
+                <div className="aspect-square rounded-2xl bg-white/5 border border-white/10"></div>
+                <div className="aspect-square rounded-2xl bg-white/5 border border-white/10"></div>
+              </div>
+           </div>
+           {/* Glow Effect */}
+           <div className="absolute -bottom-20 -right-20 w-60 h-60 bg-growth-vibrant/20 rounded-full blur-[60px]"></div>
         </div>
       </div>
     </div>
@@ -297,40 +488,48 @@ const FigmaAppCTA = () => (
 );
 
 const FigmaTestimonialCard = ({ quote, author }) => (
-  <div className="bg-[#F8FAFC] p-8 rounded flex flex-col gap-4">
-    <div className="text-[#CBD5E1]">
-      <span className="font-display-lg text-5xl">"</span>
+  <div className="bg-white p-8 rounded-[32px] border border-border-subtle flex flex-col gap-6 hover:shadow-xl transition-all duration-500 group">
+    <div className="flex gap-1 text-growth-vibrant">
+      {[1,2,3,4,5].map(i => (
+        <span key={i} className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+      ))}
     </div>
-    <h4 className="font-label-bold text-[#1A2530] text-sm">{author}</h4>
-    <p className="font-body-md text-[#64748B] text-xs leading-relaxed flex-1">
+    <p className="font-body-md text-primary text-lg leading-relaxed italic">
       "{quote}"
     </p>
-    <div className="flex gap-1 text-[#1A2530] text-xs mt-2">
-      ★★★★★
+    <div className="flex items-center gap-4 mt-auto">
+      <div className="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-primary font-bold overflow-hidden">
+        <div className="w-full h-full bg-gradient-to-br from-growth-vibrant/20 to-primary/10"></div>
+      </div>
+      <div>
+        <h4 className="font-bold text-primary text-base">{author}</h4>
+        <p className="text-on-surface-variant text-[12px] uppercase tracking-widest font-bold">Verified Investor</p>
+      </div>
     </div>
   </div>
 );
 
 const FigmaTestimonials = () => (
-  <section className="w-full py-24 bg-white">
-    <div className="max-w-[1100px] mx-auto px-gutter flex flex-col gap-10">
-      <div className="flex flex-col gap-2">
-        <h2 className="font-display-lg text-[32px] text-[#1A2530] font-bold">Our testimonials</h2>
-        <p className="font-body-md text-[#64748B] text-sm">See what our clients have to say.</p>
+  <section className="w-full py-32 bg-surface-muted relative overflow-hidden">
+    <div className="max-w-container-max mx-auto px-gutter relative z-10">
+      <div className="flex flex-col gap-4 mb-16 max-w-2xl">
+        <div className="inline-block px-4 py-2 bg-growth-vibrant/10 text-growth-vibrant font-bold text-[10px] rounded-full uppercase tracking-widest w-fit">Testimonials</div>
+        <h2 className="font-display-lg text-[48px] text-primary font-bold leading-tight">What our investors <span className="text-growth-vibrant">say</span>.</h2>
+        <p className="text-on-surface-variant text-lg">Join thousands of happy families who found their perfect investment with us.</p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <FigmaTestimonialCard 
-          author="Great experience!" 
-          quote="One of the best real estate agents I've worked with. He knew everything about the local market and helped me find a great property for an incredible price. Will totally recommend to friends and family."
+          author="Rajesh Kumar" 
+          quote="The transparency FindMyPlot offers is unmatched. The drone verification gave me the confidence to invest in Emerald Greens without even visiting the site."
         />
         <FigmaTestimonialCard 
-          author="Great selection!" 
-          quote="I was looking for an apartment for a while, but most agents I contacted just tried to sell me anything. Homerenters actually listened to my requirements and found the perfect spot in just a few days."
+          author="Sneha Reddy" 
+          quote="I was looking for a corner plot for months. Their 3D search made it so easy to visualize the facing and road widths. Highly recommended!"
         />
         <FigmaTestimonialCard 
-          author="Highly recommend" 
-          quote="After a few bad experiences with other real estate agents, I am glad I found Homerenters. They are very transparent and supportive throughout the whole process."
+          author="Amit Verma" 
+          quote="Finally a real estate platform that feels like it belongs in 2026. Clean, fast, and verified listings only. Found my dream plot in just a week."
         />
       </div>
     </div>
@@ -352,37 +551,37 @@ const HomeTab = ({ setCurrentTab }) => (
 
 // --- TAB 2: PLOTS FILTER ---
 const SearchFilterHero = () => (
-  <div className="relative w-full pt-32 pb-16 flex items-center justify-center bg-navy-deep">
-    <div className="absolute inset-0 z-0 opacity-40">
-      <img alt="Hero Background" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACl7uG8YErkwNr145vWcu5fUXcjuJVYfItejf78jwXqb1-tGv26rvSM_VRnj02YmB4m_Q8axDjLfvLWtnsLIzNMuI897MFH-A_r5NQv_aIVGRKCsHj_wmORJGTujxnon-suGRgUttYO96WboM09S2d9oGs9I5Q2qXsg2vX4PK8Aa5q9r45j9USy76Yi4PoKjisuyUVJ545V3GfhGBxBBGHTIquIZ4RokMrkABg876izKeCkr1r9lpdcW_X7gOqLxgxD6NK4xCj1SY" />
+  <div className="relative w-full pt-40 pb-20 flex items-center justify-center bg-primary overflow-hidden">
+    <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(34,197,94,0.15),transparent)]"></div>
+      <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(white 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
     </div>
-    <div className="absolute inset-0 bg-gradient-to-b from-navy-deep/80 via-navy-deep/60 to-background z-10"></div>
     
     <div className="relative z-20 w-full max-w-5xl mx-auto px-gutter text-center flex flex-col items-center">
-      <h1 className="font-display-lg text-4xl md:text-5xl text-on-primary mb-4 leading-tight drop-shadow-lg">
-        Find Your Perfect Plot in <span className="text-growth-vibrant">Diwancheruvu</span>
+      <h1 className="font-display-lg text-4xl md:text-6xl text-white mb-6 leading-tight tracking-tight">
+        Find Your Perfect Plot in <span className="text-growth-vibrant italic">Diwancheruvu</span>
       </h1>
-      <p className="font-body-lg text-surface-container-highest mb-10 max-w-2xl opacity-90 text-lg font-medium drop-shadow-md">
-        Use the filters below to narrow down premium verified plots matching your exact requirements.
+      <p className="font-body-lg text-white/70 mb-12 max-w-2xl text-lg lg:text-xl">
+        Use our advanced filters to discover premium verified plots matching your exact investment criteria.
       </p>
       
-      <div className="glass-panel w-full rounded-2xl p-6 md:p-8 flex flex-col gap-6 shadow-2xl backdrop-blur-2xl bg-white/10 border border-white/20 transform hover:-translate-y-1 transition-transform duration-500">
+      <div className="glass-panel w-full rounded-[40px] p-8 md:p-10 flex flex-col gap-8 shadow-2xl border border-white/10 bg-white/5 backdrop-blur-3xl transform hover:-translate-y-1 transition-all duration-500">
         <div className="flex flex-col md:flex-row gap-4 items-center w-full">
-          <div className="flex-1 w-full bg-white rounded-xl flex items-center px-5 py-4 border-2 border-transparent focus-within:border-growth-vibrant transition-all shadow-inner group">
-            <span className="material-symbols-outlined text-outline group-focus-within:text-growth-vibrant mr-3 text-2xl transition-colors" style={{ fontVariationSettings: "'FILL' 0" }}>location_on</span>
-            <input className="w-full bg-transparent border-none focus:ring-0 font-body-lg text-on-background placeholder:text-outline placeholder:font-medium p-0 outline-none" placeholder="Search by plot name, ID, or location..." type="text" />
+          <div className="flex-1 w-full bg-white rounded-2xl flex items-center px-6 py-4 border border-border-subtle focus-within:ring-4 focus-within:ring-growth-vibrant/10 focus-within:border-growth-vibrant transition-all group">
+            <span className="material-symbols-outlined text-outline group-focus-within:text-growth-vibrant mr-4 text-2xl transition-colors">location_on</span>
+            <input className="w-full bg-transparent border-none focus:ring-0 font-body-lg text-primary placeholder:text-outline/60 p-0 outline-none" placeholder="Search by plot name, ID, or location..." type="text" />
           </div>
-          <button className="w-full md:w-auto bg-growth-vibrant hover:bg-secondary-fixed text-primary font-label-bold text-lg px-10 py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-growth-vibrant/40 flex items-center justify-center gap-2 font-bold group">
+          <button className="w-full md:w-auto bg-growth-vibrant text-primary font-bold text-lg px-12 py-5 rounded-2xl transition-all duration-300 shadow-xl shadow-growth-vibrant/20 hover:scale-[1.02] flex items-center justify-center gap-2 group cursor-pointer">
             Filter Plots
-            <span className="material-symbols-outlined font-bold group-hover:translate-x-1 transition-transform" style={{ fontVariationSettings: "'FILL' 0" }}>arrow_forward</span>
+            <span className="material-symbols-outlined font-bold group-hover:translate-x-1 transition-transform">tune</span>
           </button>
         </div>
         
-        <div className="flex flex-wrap gap-4 w-full justify-center">
+        <div className="flex flex-wrap gap-3 w-full justify-center">
           {['GUDA Approved', 'East Facing', 'Near NH-16', 'Corner Plot', 'Ready to Build'].map(filter => (
-            <label key={filter} className="flex items-center gap-3 px-5 py-3 border border-white/20 rounded-full bg-white/5 hover:bg-white/20 hover:border-white/40 backdrop-blur-md whitespace-nowrap cursor-pointer transition-all duration-300">
-              <input className="text-growth-vibrant rounded-sm border-white/50 bg-white/10 focus:ring-growth-vibrant focus:ring-offset-0 h-4 w-4 cursor-pointer" type="checkbox" />
-              <span className="font-label-bold text-on-primary font-medium tracking-wide">{filter}</span>
+            <label key={filter} className="flex items-center gap-2 px-5 py-2.5 border border-white/10 rounded-full bg-white/5 hover:bg-white/10 hover:border-white/20 backdrop-blur-md cursor-pointer transition-all duration-300 group">
+              <input className="text-growth-vibrant rounded border-white/30 bg-white/5 focus:ring-growth-vibrant focus:ring-offset-0 h-4 w-4 cursor-pointer" type="checkbox" />
+              <span className="text-[13px] font-bold text-white/80 group-hover:text-white transition-colors uppercase tracking-wider">{filter}</span>
             </label>
           ))}
         </div>
@@ -411,10 +610,9 @@ const PlotListings = () => (
     
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
       {plotsData.map((listing) => (
-        <div key={listing.id} className="group bg-surface-container-lowest border border-border-subtle rounded-2xl overflow-hidden hover:shadow-2xl hover:border-primary/30 transform hover:-translate-y-2 transition-all duration-300 flex flex-col cursor-pointer">
-          <div className="relative h-56 overflow-hidden bg-surface-container">
-            <img alt="Plot Listing" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src={listing.img} />
-            <div className="absolute inset-0 bg-gradient-to-t from-navy-deep/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div key={listing.id} className="group bg-white border border-border-subtle/80 p-5 rounded-3xl shadow-md hover:shadow-xl hover:border-primary/20 transform hover:-translate-y-2 transition-all duration-300 flex flex-col cursor-pointer relative">
+          <div className="relative h-56 rounded-2xl overflow-hidden flex items-center justify-center bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.95)_0%,rgba(241,245,249,0.7)_100%)] border-b border-border-subtle/30">
+            <img alt="Plot Listing" className="w-[78%] h-auto object-contain transition-all duration-500 ease-out group-hover:scale-105 group-hover:-translate-y-2 drop-shadow-[0_20px_25px_rgba(0,0,0,0.18)]" src={listing.img} />
             
             <div className="absolute top-4 left-4 flex flex-col gap-2">
               {listing.badges.map(badge => (
@@ -426,17 +624,17 @@ const PlotListings = () => (
             </div>
           </div>
           
-          <div className="p-5 flex flex-col flex-1 relative bg-white">
+          <div className="flex-1 flex flex-col mt-4">
             <div className="flex justify-between items-start mb-2">
-              <div className="text-primary font-headline-md text-2xl font-bold">{listing.price}</div>
+              <div className="text-primary font-display-lg text-2xl font-bold">{listing.price}</div>
               <button className="text-outline hover:text-growth-vibrant transition-colors p-1">
                 <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 0" }}>favorite</span>
               </button>
             </div>
             
-            <h4 className="font-body-lg text-lg text-on-surface font-bold mb-4 line-clamp-1">{listing.title}</h4>
+            <h4 className="font-label-bold text-primary text-base mb-4 line-clamp-1">{listing.title}</h4>
             
-            <div className="flex gap-4 pt-4 border-t border-border-subtle/60 mt-auto bg-surface-muted -mx-5 px-5 -mb-5 pb-5">
+            <div className="flex gap-4 pt-4 border-t border-border-subtle/60 mt-auto bg-surface-muted -mx-5 px-5 -mb-5 pb-5 rounded-b-[24px]">
               <div className="flex items-center gap-2 text-on-surface-variant bg-white px-3 py-1.5 rounded-md border border-border-subtle shadow-sm">
                 <span className="material-symbols-outlined text-sm text-primary" style={{ fontVariationSettings: "'FILL' 0" }}>aspect_ratio</span>
                 <span className="font-caption text-xs font-semibold">{listing.area}</span>
@@ -565,11 +763,11 @@ const ContactTab = () => (
 
 // --- MAIN APP ---
 const Footer = () => (
-  <footer className="w-full py-12 px-gutter flex flex-col items-center text-center bg-tertiary border-t border-white/10">
-    <div className="text-headline-md font-bold text-on-tertiary mb-6 opacity-90">
+  <footer className="w-full py-12 px-gutter flex flex-col items-center text-center bg-primary border-t border-white/5">
+    <div className="text-headline-md font-bold text-on-primary mb-6 opacity-90">
       findmyplot
     </div>
-    <div className="font-body-md text-on-tertiary opacity-60">
+    <div className="font-body-md text-on-primary opacity-60">
       © 2026 findmyplot. Filter, find, and secure your plot instantly.
     </div>
   </footer>

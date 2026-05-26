@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
 :root {
   /* Colors */
@@ -17,9 +17,9 @@
   --color-border-subtle: #E2E8F0;
   
   /* Typography */
-  --font-display: 'Hanken Grotesk', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-label: 'Hanken Grotesk', sans-serif;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-label: 'Plus Jakarta Sans', sans-serif;
   
   /* Radii */
   --radius-sm: 4px;
