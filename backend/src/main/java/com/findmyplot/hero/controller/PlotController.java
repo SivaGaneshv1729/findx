@@ -17,6 +17,9 @@ public class PlotController {
     @Autowired
     private PlotRepository plotRepository;
 
+    @Autowired
+    private com.findmyplot.hero.repository.UserRepository userRepository;
+
     // Public access to view all active plots
     @GetMapping
     public ResponseEntity<List<Plot>> getAllActivePlots() {
@@ -34,8 +37,12 @@ public class PlotController {
     // Broker/Admin access to create a plot
     @PostMapping
     @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'BROKER')")
-    public ResponseEntity<Plot> createPlot(@RequestBody Plot plot) {
-        // In a real scenario, we would set the broker from the authenticated user
+    public ResponseEntity<Plot> createPlot(@RequestBody Plot plot, org.springframework.security.core.Authentication authentication) {
+        String email = authentication.getName();
+        com.findmyplot.hero.model.User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        plot.setBroker(user);
         return ResponseEntity.ok(plotRepository.save(plot));
     }
 
