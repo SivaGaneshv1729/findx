@@ -33,15 +33,15 @@ public class DataSeeder implements CommandLineRunner {
                     .build();
             userRepository.save(admin);
 
-            // Create a Broker
-            User broker = User.builder()
-                    .email("broker@example.com")
-                    .passwordHash(passwordEncoder.encode("broker123"))
-                    .fullName("John Broker")
-                    .role(User.Role.BROKER)
+            // Create a Dealer
+            User dealer = User.builder()
+                    .email("dealer@example.com")
+                    .passwordHash(passwordEncoder.encode("dealer123"))
+                    .fullName("John Dealer")
+                    .role(User.Role.DEALER)
                     .brokerCompanyName("Premium Estates")
                     .build();
-            userRepository.save(broker);
+            userRepository.save(dealer);
 
             // Seed some plots
             Plot plot1 = Plot.builder()
@@ -52,7 +52,7 @@ public class DataSeeder implements CommandLineRunner {
                     .lat(17.0435)
                     .lng(81.8235)
                     .status(Plot.Status.ACTIVE)
-                    .broker(broker)
+                    .broker(dealer)
                     .isDroneVerified(true)
                     .build();
             plotRepository.save(plot1);
@@ -65,7 +65,7 @@ public class DataSeeder implements CommandLineRunner {
                     .lat(17.0410)
                     .lng(81.8200)
                     .status(Plot.Status.ACTIVE)
-                    .broker(broker)
+                    .broker(dealer)
                     .isDroneVerified(false)
                     .build();
             plotRepository.save(plot2);
