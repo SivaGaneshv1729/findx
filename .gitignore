@@ -1,0 +1,13 @@
+node_modules/
+.vite/
+dist/
+target/
+*.class
+.mvn/
+.idea/
+.vscode/
+*.log
+.env
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
