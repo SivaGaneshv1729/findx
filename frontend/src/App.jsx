@@ -642,7 +642,6 @@ const DashboardTab = ({ user, plots, refreshPlots }) => {
       },
       body: JSON.stringify({
         ...newPlot,
-        broker: { email: user.email }, // Simplified for prototype
         lat: 17.0425 + (Math.random() - 0.5) * 0.01,
         lng: 81.8228 + (Math.random() - 0.5) * 0.01
       })
