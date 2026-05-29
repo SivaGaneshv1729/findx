@@ -1,49 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
-// --- DATA ---
-const plotsData = [
-  {
-    id: 1,
-    price: "₹45 Lakhs",
-    title: "Emerald Greens Phase II",
-    area: "200 Sq Yds",
-    facing: "East Facing",
-    img: "/images/3d_plot1.png",
-    badges: ["Drone-Verified", "GUDA Approved"],
-    coords: [17.0435, 81.8235]
-  },
-  {
-    id: 2,
-    price: "₹62 Lakhs",
-    title: "Sapphire Enclave",
-    area: "250 Sq Yds",
-    facing: "North Facing",
-    img: "/images/3d_plot2.png",
-    badges: ["Drone-Verified", "Corner Plot"],
-    coords: [17.0410, 81.8200]
-  },
-  {
-    id: 3,
-    price: "₹35 Lakhs",
-    title: "GIET Corridor Plots",
-    area: "160 Sq Yds",
-    facing: "West Facing",
-    img: "/images/3d_plot3.png",
-    badges: ["Drone-Verified", "Ready to Build"],
-    coords: [17.0450, 81.8210]
-  },
-  {
-    id: 4,
-    price: "₹80 Lakhs",
-    title: "Royal Residency Plots",
-    area: "300 Sq Yds",
-    facing: "East Facing",
-    img: "/images/3d_discover.png",
-    badges: ["Premium", "Highway Facing"],
-    coords: [17.0390, 81.8250]
-  }
-];
+// --- API CONFIG ---
+const API_BASE_URL = 'http://localhost:8080/api';
 
 // --- NAVBAR ---
 const NavBar = ({ currentTab, setCurrentTab }) => {
@@ -430,12 +389,29 @@ const FigmaTestimonials = () => (
 );
 
 // --- TAB 1: HOME PAGE (MERGED) ---
-const HomeTab = ({ setCurrentTab }) => (
+const HomeTab = ({ setCurrentTab, plots }) => (
   <div className="w-full flex flex-col bg-white overflow-hidden">
     <FigmaHero setCurrentTab={setCurrentTab} />
     <FigmaStats />
     <section id="plots" className="bg-white border-t border-primary/5">
-      <PlotListings />
+      <div className="max-w-container-max mx-auto px-gutter py-16 flex flex-col gap-10">
+        <div className="flex flex-col items-center text-center">
+          <h2 className="text-[32px] text-primary font-black tracking-tighter leading-tight">Dynamic Listings</h2>
+          <p className="text-primary/40 text-[9px] font-black uppercase tracking-[0.2em] mt-2">Latest verified plots from our brokers.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {plots.map(plot => (
+            <FigmaPropertyCard 
+              key={plot.id}
+              price={plot.price} 
+              title={plot.title} 
+              location="Diwancheruvu, Rajahmundry" 
+              img={plot.isDroneVerified ? "/images/3d_plot1.png" : "/images/3d_plot2.png"} 
+              isNew={true}
+            />
+          ))}
+        </div>
+      </div>
     </section>
     <FigmaDiscover />
     <FigmaLocationGrid title="Premium Sites" subtitle="Curated plots in prime growing locations." />
@@ -444,7 +420,7 @@ const HomeTab = ({ setCurrentTab }) => (
 );
 
 // --- TAB 3: MAP VIEW ---
-const MapViewTab = () => {
+const MapViewTab = ({ plots }) => {
   const position = [17.0425, 81.8228];
 
   return (
@@ -454,18 +430,18 @@ const MapViewTab = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {plotsData.map((plot) => (
-          <Marker key={plot.id} position={plot.coords}>
+        {plots.map((plot) => (
+          <Marker key={plot.id} position={[plot.lat, plot.lng]}>
             <Popup>
               <div className="flex flex-col gap-3 p-2 min-w-[240px]">
-                <img src={plot.img} alt={plot.title} className="w-full h-32 object-contain bg-primary/5 rounded-2xl" />
+                <img src={plot.isDroneVerified ? "/images/3d_plot1.png" : "/images/3d_plot2.png"} alt={plot.title} className="w-full h-32 object-contain bg-primary/5 rounded-2xl" />
                 <div className="space-y-1">
                   <strong className="text-primary text-xl font-black block">{plot.price}</strong>
                   <span className="text-primary/60 text-[10px] font-black uppercase tracking-widest block">{plot.title}</span>
                   <div className="flex gap-3 pt-2">
                     <span className="text-[9px] font-black text-primary uppercase tracking-widest flex items-center gap-1">
                       <span className="material-symbols-outlined text-[14px] text-primary/20">square_foot</span>
-                      {plot.area}
+                      {plot.areaSqYds} SqYd
                     </span>
                     <span className="text-[9px] font-black text-primary uppercase tracking-widest flex items-center gap-1">
                       <span className="material-symbols-outlined text-[14px] text-primary/20">explore</span>
@@ -570,17 +546,32 @@ const Footer = () => (
 
 function App() {
   const [currentTab, setCurrentTab] = useState('home');
+  const [plots, setPlots] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/plots`)
+      .then(res => res.json())
+      .then(data => {
+        setPlots(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Failed to fetch plots:", err);
+        setLoading(false);
+      });
+  }, []);
 
   const renderTab = () => {
     switch(currentTab) {
       case 'home':
-        return <HomeTab setCurrentTab={setCurrentTab} />;
+        return <HomeTab setCurrentTab={setCurrentTab} plots={plots} />;
       case 'map':
-        return <MapViewTab />;
+        return <MapViewTab plots={plots} />;
       case 'contact':
         return <ContactTab />;
       default:
-        return <HomeTab setCurrentTab={setCurrentTab} />;
+        return <HomeTab setCurrentTab={setCurrentTab} plots={plots} />;
     }
   };
 
