@@ -35,9 +35,9 @@ public class PlotController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Broker/Admin access to create a plot
+    // Dealer/Admin access to create a plot
     @PostMapping
-    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'BROKER')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN', 'DEALER')")
     public ResponseEntity<Plot> createPlot(@RequestBody Plot plot, org.springframework.security.core.Authentication authentication) {
         String email = authentication.getName();
         com.findmyplot.hero.model.User user = userRepository.findByEmail(email)

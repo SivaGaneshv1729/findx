@@ -413,7 +413,7 @@ const HomeTab = ({ setCurrentTab, plots }) => (
       <div className="max-w-container-max mx-auto px-gutter py-16 flex flex-col gap-10">
         <div className="flex flex-col items-center text-center">
           <h2 className="text-[32px] text-primary font-black tracking-tighter leading-tight">Dynamic Listings</h2>
-          <p className="text-primary/40 text-[9px] font-black uppercase tracking-[0.2em] mt-2">Latest verified plots from our brokers.</p>
+          <p className="text-primary/40 text-[9px] font-black uppercase tracking-[0.2em] mt-2">Latest verified plots from our dealers.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {plots.map(plot => (
@@ -574,7 +574,7 @@ const LoginTab = ({ onLogin }) => {
   return (
     <div className="w-full pt-32 pb-16 px-gutter min-h-screen bg-white flex justify-center items-center">
       <div className="max-w-md w-full bg-white p-10 rounded-[32px] shadow-2xl shadow-primary/10 border border-primary/5">
-        <h2 className="text-3xl font-black text-primary mb-2 tracking-tighter text-center">Broker Login</h2>
+        <h2 className="text-3xl font-black text-primary mb-2 tracking-tighter text-center">Dealer Login</h2>
         <p className="text-primary/40 text-[10px] font-black uppercase tracking-widest text-center mb-10">Access your property dashboard</p>
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
@@ -612,9 +612,9 @@ const LoginTab = ({ onLogin }) => {
   );
 };
 
-// --- TAB 6: DASHBOARD (BROKER/ADMIN) ---
+// --- TAB 6: DASHBOARD (DEALER/ADMIN) ---
 const DashboardTab = ({ user, plots, refreshPlots }) => {
-  const isBuilder = user?.role === 'BROKER';
+  const isDealer = user?.role === 'DEALER';
   const isAdmin = user?.role === 'SUPER_ADMIN';
   const [showAddForm, setShowAddForm] = useState(false);
   const [newPlot, setNewPlot] = useState({ title: '', price: '', areaSqYds: '', facing: 'East' });
@@ -692,14 +692,14 @@ const DashboardTab = ({ user, plots, refreshPlots }) => {
         <div className="flex justify-between items-end mb-12">
           <div>
             <h1 className="text-[42px] text-primary font-black tracking-tighter leading-tight">
-              {isAdmin ? 'Admin Panel' : 'Broker Dashboard'}
+              {isAdmin ? 'Admin Panel' : 'Dealer Dashboard'}
             </h1>
             <p className="text-primary/40 text-[10px] font-black uppercase tracking-widest mt-2">
               Welcome back, {user.email}
             </p>
           </div>
           
-          {isBuilder && (
+          {isDealer && (
             <button 
               onClick={() => setShowAddForm(true)}
               className="bg-primary text-white font-black text-[11px] uppercase tracking-widest px-8 py-4 rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/10 flex items-center gap-2"
