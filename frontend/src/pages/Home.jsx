@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropertyCard from '../components/PropertyCard';
-import { motion } from 'framer-motion';
+import Spinner from '../components/Spinner';
 
 const API_BASE_URL = 'http://localhost:8080/api';
 
@@ -29,26 +29,31 @@ const PlotListings = ({ plots, loading }) => (
             <h2 className="text-[32px] text-primary font-black tracking-tighter leading-tight">Dynamic Listings</h2>
             <p className="text-primary/40 text-[9px] font-black uppercase tracking-[0.2em] mt-2">Latest verified plots from our dealers.</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {loading ? <p>Loading...</p> : plots.map((plot, index) => (
-            <motion.div
-                key={plot.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-                <PropertyCard 
-                price={plot.price} 
-                title={plot.title} 
-                location="Diwancheruvu, Rajahmundry" 
-                img={plot.isDroneVerified ? "/images/3d_plot1.png" : "/images/3d_plot2.png"} 
-                isNew={true}
-                area={plot.areaSqYds}
-                facing={plot.facing}
-                />
-            </motion.div>
-            ))}
-        </div>
+        
+        {loading ? (
+            <Spinner />
+        ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                {plots.map((plot, index) => (
+                <motion.div
+                    key={plot.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                    <PropertyCard 
+                    price={plot.price} 
+                    title={plot.title} 
+                    location="Diwancheruvu, Rajahmundry" 
+                    img={plot.isDroneVerified ? "/images/3d_plot1.png" : "/images/3d_plot2.png"} 
+                    isNew={true}
+                    area={plot.areaSqYds}
+                    facing={plot.facing}
+                    />
+                </motion.div>
+                ))}
+            </div>
+        )}
         </div>
     </section>
 );

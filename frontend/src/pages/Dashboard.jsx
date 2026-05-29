@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { motion } from 'framer-motion';
+import Spinner from '../components/Spinner';
 
 const API_BASE_URL = 'http://localhost:8080/api';
 
@@ -91,7 +91,11 @@ const Dashboard = () => {
         // Verification logic
     };
 
-    if (loading) return <div>Loading dashboard...</div>;
+    if (loading) return (
+        <div className="w-full pt-24 pb-16 px-gutter min-h-screen bg-white flex justify-center items-center">
+            <Spinner />
+        </div>
+    );
 
     return (
         <motion.div 
