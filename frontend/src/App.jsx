@@ -5,12 +5,16 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 const API_BASE_URL = 'http://localhost:8080/api';
 
 // --- NAVBAR ---
-const NavBar = ({ currentTab, setCurrentTab }) => {
+const NavBar = ({ currentTab, setCurrentTab, user, logout }) => {
   const tabs = [
     { id: 'home', label: 'Discover' },
     { id: 'map', label: 'Map View' },
     { id: 'contact', label: 'Contact' }
   ];
+
+  if (user) {
+    tabs.push({ id: 'dashboard', label: 'Dashboard' });
+  }
 
   return (
     <nav className="bg-white/95 backdrop-blur-md border-b border-primary/5 fixed top-0 w-full z-50 h-16 transition-all flex items-center">
@@ -45,9 +49,21 @@ const NavBar = ({ currentTab, setCurrentTab }) => {
         </div>
 
         <div className="hidden md:flex items-center gap-6">
-          <button className="text-primary font-black text-[11px] uppercase tracking-widest hover:opacity-60 transition-opacity">
-            Login
-          </button>
+          {!user ? (
+            <button 
+              onClick={() => setCurrentTab('login')}
+              className="text-primary font-black text-[11px] uppercase tracking-widest hover:opacity-60 transition-opacity"
+            >
+              Login
+            </button>
+          ) : (
+            <button 
+              onClick={logout}
+              className="text-red-500 font-black text-[11px] uppercase tracking-widest hover:opacity-60 transition-opacity"
+            >
+              Logout
+            </button>
+          )}
           <button className="bg-primary text-white font-black text-[11px] uppercase tracking-widest px-6 py-3 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/5">
             Get Started
           </button>
@@ -532,6 +548,213 @@ const ContactTab = () => (
   </div>
 );
 
+// --- TAB 5: LOGIN PAGE ---
+const LoginTab = ({ onLogin }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError('');
+    
+    fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    })
+    .then(res => {
+      if (!res.ok) throw new Error('Invalid credentials');
+      return res.json();
+    })
+    .then(data => onLogin(data))
+    .catch(err => setError(err.message));
+  };
+
+  return (
+    <div className="w-full pt-32 pb-16 px-gutter min-h-screen bg-white flex justify-center items-center">
+      <div className="max-w-md w-full bg-white p-10 rounded-[32px] shadow-2xl shadow-primary/10 border border-primary/5">
+        <h2 className="text-3xl font-black text-primary mb-2 tracking-tighter text-center">Broker Login</h2>
+        <p className="text-primary/40 text-[10px] font-black uppercase tracking-widest text-center mb-10">Access your property dashboard</p>
+        
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40">Email Address</label>
+            <input 
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="border-b-2 border-primary/5 py-3 font-black text-primary focus:border-primary outline-none transition-colors text-sm" 
+              placeholder="admin@findmyplot.com" 
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40">Password</label>
+            <input 
+              type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="border-b-2 border-primary/5 py-3 font-black text-primary focus:border-primary outline-none transition-colors text-sm" 
+              placeholder="••••••••" 
+              required
+            />
+          </div>
+          
+          {error && <p className="text-red-500 text-[10px] font-bold uppercase">{error}</p>}
+          
+          <button type="submit" className="bg-primary text-white font-black text-[11px] uppercase tracking-widest py-5 rounded-2xl hover:bg-primary/90 transition-all mt-4 shadow-xl shadow-primary/10">
+            Sign In
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+// --- TAB 6: DASHBOARD (BROKER/ADMIN) ---
+const DashboardTab = ({ user, plots, refreshPlots }) => {
+  const isBuilder = user?.role === 'BROKER';
+  const isAdmin = user?.role === 'SUPER_ADMIN';
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newPlot, setNewPlot] = useState({ title: '', price: '', areaSqYds: '', facing: 'East' });
+
+  const handleVerify = (plotId) => {
+    fetch(`${API_BASE_URL}/plots/${plotId}/verify`, {
+      method: 'PATCH',
+      headers: { 
+        'Authorization': `Bearer ${user.token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => {
+      if (res.ok) refreshPlots();
+    });
+  };
+
+  const handleAddPlot = (e) => {
+    e.preventDefault();
+    fetch(`${API_BASE_URL}/plots`, {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${user.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        ...newPlot,
+        broker: { email: user.email }, // Simplified for prototype
+        lat: 17.0425 + (Math.random() - 0.5) * 0.01,
+        lng: 81.8228 + (Math.random() - 0.5) * 0.01
+      })
+    })
+    .then(res => {
+      if (res.ok) {
+        setShowAddForm(false);
+        refreshPlots();
+      }
+    });
+  };
+
+  return (
+    <div className="w-full pt-24 pb-16 px-gutter min-h-screen bg-white">
+      <div className="max-w-container-max mx-auto">
+        {showAddForm && (
+          <div className="fixed inset-0 bg-primary/20 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
+            <div className="bg-white rounded-[32px] p-10 max-w-xl w-full shadow-2xl border border-primary/5">
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-2xl font-black text-primary tracking-tight">Upload New Plot</h2>
+                <button onClick={() => setShowAddForm(false)} className="text-primary/40 hover:text-primary transition-colors">
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              <form onSubmit={handleAddPlot} className="grid grid-cols-2 gap-6">
+                <div className="col-span-2 flex flex-col gap-2">
+                  <label className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40">Plot Title</label>
+                  <input type="text" value={newPlot.title} onChange={e => setNewPlot({...newPlot, title: e.target.value})} className="border-b-2 border-primary/5 py-3 font-black text-primary focus:border-primary outline-none transition-colors text-sm" placeholder="Emerald Greens Phase III" required />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40">Price</label>
+                  <input type="text" value={newPlot.price} onChange={e => setNewPlot({...newPlot, price: e.target.value})} className="border-b-2 border-primary/5 py-3 font-black text-primary focus:border-primary outline-none transition-colors text-sm" placeholder="₹55 Lakhs" required />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40">Size (SqYds)</label>
+                  <input type="number" value={newPlot.areaSqYds} onChange={e => setNewPlot({...newPlot, areaSqYds: e.target.value})} className="border-b-2 border-primary/5 py-3 font-black text-primary focus:border-primary outline-none transition-colors text-sm" placeholder="200" required />
+                </div>
+                <div className="col-span-2">
+                  <button type="submit" className="w-full bg-primary text-white font-black text-[11px] uppercase tracking-widest py-5 rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/10">
+                    Publish Listing
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        <div className="flex justify-between items-end mb-12">
+          <div>
+            <h1 className="text-[42px] text-primary font-black tracking-tighter leading-tight">
+              {isAdmin ? 'Admin Panel' : 'Broker Dashboard'}
+            </h1>
+            <p className="text-primary/40 text-[10px] font-black uppercase tracking-widest mt-2">
+              Welcome back, {user.email}
+            </p>
+          </div>
+          
+          {isBuilder && (
+            <button 
+              onClick={() => setShowAddForm(true)}
+              className="bg-primary text-white font-black text-[11px] uppercase tracking-widest px-8 py-4 rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/10 flex items-center gap-2"
+            >
+              <span className="material-symbols-outlined text-[20px]">add</span>
+              Add New Plot
+            </button>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 gap-6">
+          {plots.map(plot => (
+            <div key={plot.id} className="bg-white border-2 border-primary/5 rounded-[24px] p-6 flex items-center gap-8 group hover:border-primary/10 transition-all">
+              <div className="w-32 h-32 rounded-2xl overflow-hidden bg-primary/5 shrink-0">
+                <img src="/images/3d_plot1.png" alt="plot" className="w-full h-full object-cover" />
+              </div>
+              
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="text-2xl font-black text-primary">{plot.price}</span>
+                  {plot.isDroneVerified && (
+                    <span className="bg-green-500/10 text-green-600 text-[8px] font-black uppercase px-2 py-1 rounded-md">Drone Verified</span>
+                  )}
+                </div>
+                <h3 className="font-black text-primary text-lg mb-1">{plot.title}</h3>
+                <p className="text-primary/40 text-[10px] font-bold uppercase tracking-widest">
+                  {plot.areaSqYds} SqYds • {plot.facing} • {plot.status}
+                </p>
+              </div>
+
+              <div className="flex gap-4">
+                {isAdmin && !plot.isDroneVerified && (
+                  <button 
+                    onClick={() => handleVerify(plot.id)}
+                    className="bg-primary/5 text-primary font-black text-[10px] uppercase tracking-widest px-6 py-3 rounded-xl hover:bg-primary hover:text-white transition-all"
+                  >
+                    Verify Now
+                  </button>
+                )}
+                <button className="p-3 rounded-xl border-2 border-primary/5 text-primary hover:bg-primary/5 transition-all">
+                  <span className="material-symbols-outlined">edit</span>
+                </button>
+                <button className="p-3 rounded-xl border-2 border-primary/5 text-red-500 hover:bg-red-50 transition-all">
+                  <span className="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- MAIN APP ---
 const Footer = () => (
   <footer className="w-full py-16 px-gutter flex flex-col items-center text-center bg-white border-t border-primary/5">
@@ -548,8 +771,9 @@ function App() {
   const [currentTab, setCurrentTab] = useState('home');
   const [plots, setPlots] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
 
-  useEffect(() => {
+  const fetchPlots = () => {
     fetch(`${API_BASE_URL}/plots`)
       .then(res => res.json())
       .then(data => {
@@ -560,7 +784,23 @@ function App() {
         console.error("Failed to fetch plots:", err);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchPlots();
   }, []);
+
+  const handleLogin = (userData) => {
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
+    setCurrentTab('dashboard');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+    setCurrentTab('home');
+  };
 
   const renderTab = () => {
     switch(currentTab) {
@@ -570,6 +810,10 @@ function App() {
         return <MapViewTab plots={plots} />;
       case 'contact':
         return <ContactTab />;
+      case 'login':
+        return <LoginTab onLogin={handleLogin} />;
+      case 'dashboard':
+        return <DashboardTab user={user} plots={plots} refreshPlots={fetchPlots} />;
       default:
         return <HomeTab setCurrentTab={setCurrentTab} plots={plots} />;
     }
@@ -577,7 +821,7 @@ function App() {
 
   return (
     <div className="bg-background min-h-screen flex flex-col">
-      <NavBar currentTab={currentTab} setCurrentTab={setCurrentTab} />
+      <NavBar currentTab={currentTab} setCurrentTab={setCurrentTab} user={user} logout={handleLogout} />
       
       <div className="flex-1 w-full">
         {renderTab()}
