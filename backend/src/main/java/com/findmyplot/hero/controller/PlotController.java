@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/plots")
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
 public class PlotController {
 
     @Autowired
