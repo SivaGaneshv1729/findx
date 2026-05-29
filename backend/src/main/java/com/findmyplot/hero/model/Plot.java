@@ -39,8 +39,10 @@ public class Plot {
     private Double lng;
 
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private Status status = Status.ACTIVE;
 
+    @Builder.Default
     private Boolean isDroneVerified = false;
 
     private LocalDateTime createdAt;
