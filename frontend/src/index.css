@@ -1,130 +1,149 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
-:root {
-  /* Colors */
-  --color-primary: #0A1F44;
-  --color-secondary: #0A1F44;
+@theme {
+  --color-primary: #1a1a1a;
+  --color-primary-soft: #333333;
+  --color-accent: #9A7E6F;
+  --color-accent-soft: #dcd3ce;
+  --color-vibrant-orange: #b48a66;
+  --color-vibrant-teal: #6b705c;
+  --color-ink: #1a1a1a;
+  --color-muted: #737373;
+  --color-surface: #FDFBF7;
+  --color-surface-muted: #F3F0EB;
+  --color-line: #E5E5E5;
   
-  --color-surface: #FFFFFF;
-  --color-surface-muted: #F8FAFC;
-  --color-surface-lowest: #FFFFFF;
-  
-  --color-on-surface: #0A1F44;
-  --color-on-surface-variant: rgba(10, 31, 68, 0.4);
-  --color-on-primary: #FFFFFF;
-  
-  --color-border-subtle: rgba(10, 31, 68, 0.05);
-  
-  /* Typography */
-  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --font-display: 'Playfair Display', serif;
   --font-body: 'Plus Jakarta Sans', sans-serif;
-  --font-label: 'Plus Jakarta Sans', sans-serif;
   
-  /* Radii */
-  --radius-sm: 8px;
-  --radius-md: 16px;
-  --radius-lg: 32px;
-  
-  /* Elevation */
-  --shadow-ambient: 0px 30px 60px rgba(10, 31, 68, 0.05);
+  --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-strong: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  --spacing-gutter: 24px;
+  --max-width-container-max: 1280px;
+
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+:root {
+  --color-primary: #1a1a1a;
+  --color-accent: #9A7E6F;
+  --color-line: #E5E5E5;
+}
+
+
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
+  min-width: 320px;
   font-family: var(--font-body);
   background-color: var(--color-surface);
-  color: var(--color-on-surface);
-  line-height: 1.5;
+  color: var(--color-ink);
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Typography utilities - keeping legacy classes but updating their styles */
-.headline-lg {
-  font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 900;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  color: var(--color-primary);
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-.display-lg {
-  font-family: var(--font-display);
-  font-size: 56px;
-  font-weight: 900;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  color: var(--color-primary);
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
-@media (max-width: 768px) {
-  .display-lg {
-    font-size: 40px;
-  }
+#root {
+  min-height: 100vh;
 }
 
-.body-lg {
-  font-family: var(--font-body);
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.6;
-  color: var(--color-on-surface-variant);
-}
-
-.label-bold {
-  font-family: var(--font-label);
-  font-size: 12px;
-  font-weight: 900;
-  line-height: 1.2;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-/* Layout */
 .container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding-inline: 24px;
 }
 
-/* Base button */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px 32px;
-  border-radius: var(--radius-md);
-  font-family: var(--font-label);
-  font-weight: 900;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  border: none;
+.section-shell {
+  position: relative;
+  overflow-x: clip;
+  background-color: var(--color-surface);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(154, 126, 111, 0.08), transparent 40%),
+    radial-gradient(circle at 90% 40%, rgba(107, 112, 92, 0.06), transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(180, 138, 102, 0.06), transparent 40%);
+}
+
+.glass {
+  background: rgba(253, 251, 247, 0.65);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.03);
+}
+
+.glass-dark {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+}
+
+.brand-mark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.title-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.eyebrow {
+  @apply text-[0.65rem] font-bold uppercase tracking-[0.2em] text-accent;
+}
+
+.field-shell {
+  @apply border border-line bg-white rounded-xl px-4 py-3 transition-all duration-200;
+}
+
+.field-shell:focus {
+  @apply outline-none border-accent ring-4 ring-accent/10;
 }
 
 .btn-primary {
-  background-color: var(--color-primary);
-  color: var(--color-on-primary);
-  box-shadow: 0 10px 20px rgba(10, 31, 68, 0.1);
-}
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(10, 31, 68, 0.15);
+  @apply inline-flex items-center justify-center rounded-none bg-primary px-8 py-3 text-[13px] uppercase tracking-wider font-semibold text-surface transition-all hover:bg-primary-soft hover:shadow-lg active:scale-95;
 }
 
-.btn-action {
-  background-color: var(--color-primary);
-  color: white;
-  font-size: 14px;
-}
-.btn-action:hover {
-  opacity: 0.9;
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-none border border-line bg-transparent px-8 py-3 text-[13px] uppercase tracking-wider font-semibold text-primary transition-all hover:border-primary hover:text-primary active:scale-95;
 }
 
+/* Custom styles for Leaflet popups */
+.custom-popup .leaflet-popup-content-wrapper {
+  @apply rounded-2xl border border-line p-0 shadow-strong;
+}
+
+.custom-popup .leaflet-popup-content {
+  @apply m-0;
+}
+
+.custom-popup .leaflet-popup-tip {
+  @apply bg-white border-b border-r border-line;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding-inline: 18px;
+  }
+}

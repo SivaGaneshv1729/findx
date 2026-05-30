@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 
-const API_BASE_URL = 'http://localhost:8080/api';
+import { loginApi } from '../api/authApi';
+
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
@@ -14,17 +15,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (email, password) => {
-        const response = await fetch(`${API_BASE_URL}/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-        });
-
-        if (!response.ok) {
-            throw new Error('Login failed');
-        }
-
-        const userData = await response.json();
+        const userData = await loginApi(email, password);
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);
         return userData;
