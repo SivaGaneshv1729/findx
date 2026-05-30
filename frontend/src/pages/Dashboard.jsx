@@ -1,134 +1,193 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useAuth } from '../hooks/useAuth';
-import Spinner from '../components/Spinner';
-
-const API_BASE_URL = 'http://localhost:8080/api';
-
-const AddPlotModal = ({ user, onClose, refreshPlots }) => {
-    const [newPlot, setNewPlot] = useState({ title: '', price: '', areaSqYds: '', facing: 'East' });
-
-    const handleAddPlot = (e) => {
-        e.preventDefault();
-        fetch(`${API_BASE_URL}/plots`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${user.token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                ...newPlot,
-                lat: 17.0425 + (Math.random() - 0.5) * 0.01,
-                lng: 81.8228 + (Math.random() - 0.5) * 0.01
-            })
-        })
-        .then(res => {
-            if (res.ok) {
-                refreshPlots();
-                onClose();
-            }
-        });
-    };
-
-    return (
-        <motion.div 
-            className="fixed inset-0 bg-primary/20 backdrop-blur-sm z-[100] flex items-center justify-center p-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-        >
-            <div className="bg-white rounded-[32px] p-10 max-w-xl w-full shadow-2xl border border-primary/5">
-                <div className="flex justify-between items-center mb-8">
-                    <h2 className="text-2xl font-black text-primary tracking-tight">Upload New Plot</h2>
-                    <button onClick={onClose} className="text-primary/40 hover:text-primary transition-colors">
-                        <span className="material-symbols-outlined">close</span>
-                    </button>
-                </div>
-                <form onSubmit={handleAddPlot} className="grid grid-cols-2 gap-6">
-                    <div className="col-span-2 flex flex-col gap-2">
-                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40">Plot Title</label>
-                        <input type="text" value={newPlot.title} onChange={e => setNewPlot({ ...newPlot, title: e.target.value })} className="border-b-2 border-primary/5 py-3 font-black text-primary focus:border-primary outline-none transition-colors text-sm" placeholder="Emerald Greens Phase III" required />
-                    </div>
-                    {/* Add other fields here */}
-                    <div className="col-span-2">
-                        <button type="submit" className="w-full bg-primary text-white font-black text-[11px] uppercase tracking-widest py-5 rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/10">
-                            Publish Listing
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </motion.div>
-    );
-};
-
+import Spinner from '../components/ui/Spinner';
+import AddPlotModal from '../components/features/AddPlotModal';
+import StatCard from '../components/ui/StatCard';
+import { getPlots, verifyPlot, deletePlot } from '../api/plotsApi';
 
 const Dashboard = () => {
-    const { user } = useAuth();
-    const [plots, setPlots] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [showAddForm, setShowAddForm] = useState(false);
+  const { user } = useAuth();
+  const [plots, setPlots] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showAddForm, setShowAddForm] = useState(false);
 
-    const fetchPlots = () => {
-        // In a real app, you might fetch only the user's plots if they are a dealer
-        fetch(`${API_BASE_URL}/plots`, {
-            headers: { 'Authorization': `Bearer ${user.token}` }
-        })
-        .then(res => res.json())
-        .then(data => {
-            setPlots(data);
-            setLoading(false);
-        })
-        .catch(err => {
-            console.error("Failed to fetch plots:", err);
-            setLoading(false);
-        });
-    };
+  const fetchPlots = () => {
+    getPlots(user.token)
+      .then((data) => {
+        setPlots(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch plots:', err);
+        setLoading(false);
+      });
+  };
 
-    useEffect(() => {
-        if(user) fetchPlots();
-    }, [user]);
+  useEffect(() => {
+    if (user) {
+      fetchPlots();
+    }
+  }, [user]);
 
-    const handleVerify = (plotId) => {
-        // Verification logic
-    };
+  const handleVerify = (plotId) => {
+    verifyPlot(plotId, user.token).then(() => {
+      fetchPlots();
+    }).catch(err => {
+      console.error('Failed to verify plot:', err);
+    });
+  };
 
-    if (loading) return (
-        <div className="w-full pt-24 pb-16 px-gutter min-h-screen bg-white flex justify-center items-center">
-            <Spinner />
-        </div>
-    );
+  const handleDelete = (plotId) => {
+    if (!window.confirm('Are you sure you want to delete this listing?')) {
+      return;
+    }
+    deletePlot(plotId, user.token).then(() => {
+      fetchPlots();
+    }).catch(err => {
+      console.error('Failed to delete plot:', err);
+    });
+  };
 
+  if (loading) {
     return (
-        <motion.div 
-            className="w-full pt-24 pb-16 px-gutter min-h-screen bg-white"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-        >
-            {showAddForm && <AddPlotModal user={user} onClose={() => setShowAddForm(false)} refreshPlots={fetchPlots} />}
-            
-            <div className="max-w-container-max mx-auto">
-                 <div className="flex justify-between items-end mb-12">
-                    <div>
-                        <h1 className="text-[42px] text-primary font-black tracking-tighter leading-tight">
-                            {user?.role === 'SUPER_ADMIN' ? 'Admin Panel' : 'Dealer Dashboard'}
-                        </h1>
-                        <p className="text-primary/40 text-[10px] font-black uppercase tracking-widest mt-2">
-                            Welcome back, {user.email}
-                        </p>
-                    </div>
-                    {user?.role === 'DEALER' && (
-                        <button 
-                        onClick={() => setShowAddForm(true)}
-                        className="bg-primary text-white font-black text-[11px] uppercase tracking-widest px-8 py-4 rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/10 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-[20px]">add</span>
-                            Add New Plot
-                        </button>
-                    )}
-                </div>
-                {/* Render plots list */}
-            </div>
-        </motion.div>
+      <div className="flex-1 flex items-center justify-center p- gutter">
+        <Spinner />
+      </div>
     );
+  }
+
+  const stats = [
+    { label: 'Total Plots', value: plots.length, icon: 'analytics', colorClass: 'bg-accent' },
+    { label: 'Verified', value: plots.filter((p) => p.isDroneVerified).length, icon: 'verified', colorClass: 'bg-vibrant-teal' },
+    { label: 'Pending', value: plots.filter((p) => !p.isDroneVerified).length, icon: 'pending', colorClass: 'bg-vibrant-orange' },
+    { label: 'Active Listings', value: plots.filter((p) => p.status === 'ACTIVE').length, icon: 'visibility', colorClass: 'bg-primary' },
+  ];
+
+  return (
+    <motion.div
+      className="section-shell flex-1 pt-32 pb-20"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <AnimatePresence>
+        {showAddForm && <AddPlotModal user={user} onClose={() => setShowAddForm(false)} refreshPlots={fetchPlots} />}
+      </AnimatePresence>
+
+      <div className="container relative z-10">
+        <div className="rounded-3xl border border-line bg-white p-8 shadow-strong sm:p-10 lg:flex lg:items-center lg:justify-between lg:gap-10">
+          <div className="max-w-2xl">
+            <div className="eyebrow mb-4">
+              {user?.role === 'SUPER_ADMIN' ? 'Admin Control Center' : 'Dealer Workspace'}
+            </div>
+            <h1 className="title-display text-4xl text-primary leading-tight sm:text-5xl">
+              Cleaner <span className="text-accent">inventory oversight</span> for real estate operations.
+            </h1>
+            <p className="mt-6 text-muted text-lg font-medium leading-relaxed">
+              Review listing quality, track verification, and keep active plots ready for buyers exploring the marketplace. Signed in as <span className="text-primary font-bold">{user?.email}</span>
+            </p>
+          </div>
+          {user?.role === 'DEALER' && (
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="btn-primary mt-8 lg:mt-0 py-4 px-10 text-base shrink-0"
+            >
+              Add New Plot
+            </button>
+          )}
+        </div>
+
+        <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {stats.map((stat) => (
+            <StatCard key={stat.label} {...stat} />
+          ))}
+        </div>
+
+        <div className="mt-10 overflow-hidden rounded-3xl border border-line bg-white shadow-soft">
+          <div className="flex flex-col gap-3 border-b border-line px-8 py-8 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-1">
+              <span className="eyebrow">Inventory Table</span>
+              <h2 className="title-display text-2xl text-primary">Recent plot pipeline</h2>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[900px] text-left">
+              <thead>
+                <tr className="border-b border-line bg-surface-muted">
+                  <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-muted">Listing</th>
+                  <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-muted">Pricing</th>
+                  <th className="px-8 py-5 text-[10px] font-bold uppercase tracking-widest text-muted text-center">Verification Status</th>
+                  <th className="px-8 py-5 text-right text-[10px] font-bold uppercase tracking-widest text-muted">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {plots.map((plot, idx) => (
+                  <motion.tr
+                    key={plot.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: idx * 0.04 }}
+                    className="transition-colors hover:bg-surface-muted/50"
+                  >
+                    <td className="px-8 py-6 align-middle">
+                      <div className="flex flex-col">
+                        <span className="title-display text-xl text-primary leading-none mb-2">{plot.title}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-muted leading-none">
+                          PID-{String(plot.id).split('-')[0].toUpperCase()}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-8 py-6 align-middle">
+                      <div className="flex flex-col">
+                        <span className="text-lg font-bold text-primary leading-none mb-2">{plot.price}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-muted leading-none">
+                          {plot.areaSqYds} SqYd • {plot.facing}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-8 py-6 align-middle text-center">
+                      <div
+                        className={`inline-flex items-center rounded-lg px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider ${
+                          plot.isDroneVerified
+                            ? 'bg-vibrant-teal/10 text-vibrant-teal'
+                            : 'bg-vibrant-orange/10 text-vibrant-orange'
+                        }`}
+                      >
+                        <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${plot.isDroneVerified ? 'bg-vibrant-teal' : 'bg-vibrant-orange'}`}></span>
+                        {plot.isDroneVerified ? 'Drone Verified' : 'Pending Review'}
+                      </div>
+                    </td>
+                    <td className="px-8 py-6 align-middle text-right">
+                      <div className="flex justify-end items-center gap-3">
+                        {user?.role === 'SUPER_ADMIN' && !plot.isDroneVerified && (
+                          <button
+                            onClick={() => handleVerify(plot.id)}
+                            className="btn-primary py-2 px-6 text-[11px]"
+                          >
+                            Verify
+                          </button>
+                        )}
+                        {user?.role === 'DEALER' && (
+                          <button
+                            onClick={() => handleDelete(plot.id)}
+                            className="inline-flex items-center rounded-lg border-2 border-red-100 px-5 py-2 text-[11px] font-bold uppercase tracking-wider text-red-600 hover:bg-red-50 hover:border-red-200 transition-all"
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
 };
 
 export default Dashboard;
