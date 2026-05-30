@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -20,7 +23,8 @@ public class Plot {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "broker_id", nullable = false)
+    @JoinColumn(name = "broker_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private User broker;
 
     @Column(nullable = false)
