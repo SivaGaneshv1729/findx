@@ -1,70 +1,112 @@
 import React, { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useAuth } from '../hooks/useAuth';
 
 const Login = () => {
-    const [email, setEmail] = useState('dealer@example.com');
-    const [password, setPassword] = useState('dealer123');
-    const [error, setError] = useState('');
-    const { login } = useAuth();
-    const navigate = useNavigate();
+  const [email, setEmail] = useState('dealer@example.com');
+  const [password, setPassword] = useState('dealer123');
+  const [error, setError] = useState('');
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        try {
-            await login(email, password);
-            navigate('/dashboard');
-        } catch (err) {
-            setError('Invalid credentials. Please try again.');
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    try {
+      await login(email, password);
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Invalid credentials. Please try again.');
+    }
+  };
 
-    return (
-        <motion.div 
-            className="w-full pt-32 pb-16 px-gutter min-h-screen bg-white flex justify-center items-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-        >
-            <div className="max-w-md w-full bg-white p-10 rounded-[32px] shadow-2xl shadow-primary/10 border border-primary/5">
-                <h2 className="text-3xl font-black text-primary mb-2 tracking-tighter text-center">Dealer Login</h2>
-                <p className="text-primary/40 text-[10px] font-black uppercase tracking-widest text-center mb-10">Access your property dashboard</p>
-                
-                <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40">Email Address</label>
-                        <input 
-                            type="email" 
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="border-b-2 border-primary/5 py-3 font-black text-primary focus:border-primary outline-none transition-colors text-sm" 
-                            placeholder="dealer@example.com" 
-                            required
-                        />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-primary/40">Password</label>
-                        <input 
-                            type="password" 
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="border-b-2 border-primary/5 py-3 font-black text-primary focus:border-primary outline-none transition-colors text-sm" 
-                            placeholder="••••••••" 
-                            required
-                        />
-                    </div>
-                    
-                    {error && <p className="text-red-500 text-[10px] font-bold uppercase text-center">{error}</p>}
-                    
-                    <button type="submit" className="bg-primary text-white font-black text-[11px] uppercase tracking-widest py-5 rounded-2xl hover:bg-primary/90 transition-all mt-4 shadow-xl shadow-primary/10">
-                        Sign In
-                    </button>
-                </form>
+  return (
+    <motion.div
+      className="section-shell flex-1 flex items-center justify-center pt-32 pb-20 lg:pt-20 lg:pb-20"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <div className="container relative z-10 max-w-6xl">
+        <div className="grid gap-16 lg:grid-cols-2 lg:items-center xl:gap-24">
+          <div className="hidden lg:flex flex-col text-left">
+            <div className="eyebrow mb-6">Management Portal</div>
+            <h1 className="title-display text-6xl text-primary leading-tight mb-8">
+              Take control of your <span className="text-accent">real estate operations.</span>
+            </h1>
+            <p className="text-xl text-muted font-medium leading-relaxed mb-10">
+              Sign in to manage listings, verify new inventory, and keep your properties ready for buyer discovery.
+            </p>
+            
+            <div className="grid grid-cols-2 gap-6 max-w-lg">
+              <div className="rounded-2xl border border-line bg-white p-6 shadow-soft flex flex-col gap-1">
+                <span className="title-display text-3xl text-accent">1</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-muted">Unified Workspace</span>
+              </div>
+              <div className="rounded-2xl border border-line bg-white p-6 shadow-soft flex flex-col gap-1">
+                <span className="title-display text-3xl text-accent">24h</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-muted">Review Cycle</span>
+              </div>
             </div>
-        </motion.div>
-    );
+          </div>
+
+          <div className="w-full max-w-md mx-auto rounded-3xl border border-line bg-white p-10 shadow-strong sm:p-12">
+            <div className="mb-10 text-center lg:text-left">
+              <h2 className="title-display text-3xl text-primary mb-2">Welcome Back</h2>
+              <p className="text-muted font-medium">Please enter your details to sign in.</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+              <div className="flex flex-col gap-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-primary/60 px-1">Email Address</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="field-shell"
+                  placeholder="dealer@example.com"
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-primary/60 px-1">Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="field-shell"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+
+              {error && (
+                <div className="rounded-xl bg-red-50 border border-red-100 p-4 text-center">
+                  <p className="text-[10px] font-bold text-red-600 uppercase tracking-wider">{error}</p>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="btn-primary w-full py-4 text-base mt-2"
+              >
+                Sign In to Dashboard
+              </button>
+
+              <div className="flex justify-center items-center gap-2 mt-4 text-muted">
+                <span className="material-symbols-outlined text-[16px]">lock</span>
+                <span className="text-[10px] font-bold text-muted uppercase tracking-widest">
+                  Authorized Personnel Only
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
 };
 
 export default Login;
