@@ -1,82 +1,89 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
-import { motion } from 'framer-motion';
 import 'leaflet/dist/leaflet.css';
-
 import { getPlots } from '../api/plotsApi';
+import FilterBar from '../components/features/FilterBar';
+import ListingCard from '../components/features/ListingCard';
+import Spinner from '../components/ui/Spinner';
 
 const MapPage = () => {
   const [plots, setPlots] = useState([]);
+  const [loading, setLoading] = useState(true);
   const position = [17.0425, 81.8228];
 
   useEffect(() => {
     getPlots()
-      .then((data) => setPlots(data))
-      .catch((err) => console.error('Failed to fetch plots:', err));
+      .then((data) => {
+        setPlots(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Failed to fetch plots:', err);
+        setLoading(false);
+      });
   }, []);
 
   return (
-    <motion.div
-      className="relative flex-1 w-full overflow-hidden"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <div className="absolute inset-0 z-0">
-        <MapContainer center={position} zoom={13} scrollWheelZoom style={{ height: '100%', width: '100%' }}>
-          <TileLayer
-            attribution='&copy; OpenStreetMap contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          {plots.map((plot) => (
-            <Marker key={plot.id} position={[plot.lat, plot.lng]}>
-              <Popup className="custom-popup">
-                <div className="min-w-[240px] p-2">
-                  <h3 className="title-display text-xl text-primary mb-1">{plot.title}</h3>
-                  <p className="text-2xl font-bold text-accent mb-4">{plot.price}</p>
-                  <div className="flex gap-4 border-t border-line pt-4">
-                    <div className="flex flex-col">
-                      <span className="text-[9px] font-bold uppercase tracking-widest text-muted mb-0.5">Area</span>
-                      <span className="text-xs font-bold text-primary">{plot.areaSqYds} SqYd</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-[9px] font-bold uppercase tracking-widest text-muted mb-0.5">Facing</span>
-                      <span className="text-xs font-bold text-primary">{plot.facing}</span>
-                    </div>
-                  </div>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
-      </div>
+    <div className="flex flex-col flex-1 h-screen overflow-hidden bg-white">
+      <div className="mt-20"></div> {/* Spacer for fixed navbar */}
+      
+      {/* Top Filter Bar */}
+      <FilterBar />
 
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex justify-center p-6 pt-28 sm:p-10 sm:pt-32 lg:justify-start">
-        <div className="pointer-events-auto w-full max-w-sm rounded-3xl border border-line bg-white/95 p-8 text-primary shadow-strong backdrop-blur-md">
-          <div className="flex flex-col gap-1">
-            <span className="eyebrow">Live Location View</span>
-            <h2 className="title-display text-3xl leading-tight mb-4">Scout neighborhoods <span className="text-accent">digitally.</span></h2>
-          </div>
-          <p className="text-sm font-medium text-muted leading-relaxed mb-8">
-            Use the map to compare nearby listings, inspect corridor density, and understand where verified inventory is clustering.
-          </p>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col rounded-2xl border border-line bg-white p-4 shadow-soft">
-              <span className="title-display text-3xl text-accent mb-1">{plots.length}</span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted">
-                Active Markers
-              </span>
-            </div>
-            <div className="flex flex-col rounded-2xl border border-line bg-white p-4 shadow-soft">
-              <span className="title-display text-3xl text-accent mb-1">13</span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted">
-                Zoom Level
-              </span>
-            </div>
-          </div>
+      {/* Split View Content */}
+      <div className="split-view !mt-0 h-[calc(100vh-80px-70px)] lg:h-[calc(100vh-80px-70px)]">
+        
+        {/* Left: Map Container */}
+        <div className="map-container lg:h-full">
+          <MapContainer center={position} zoom={13} scrollWheelZoom style={{ height: '100%', width: '100%' }}>
+            <TileLayer
+              attribution='&copy; OpenStreetMap'
+              url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            />
+            {plots.map((plot) => (
+              <Marker key={plot.id} position={[plot.lat, plot.lng]}>
+                <Popup className="custom-popup">
+                  <div className="min-w-[200px] p-2">
+                    <h3 className="title-display text-xl text-primary mb-1">{plot.price}</h3>
+                    <p className="text-sm font-medium text-muted">{plot.title}</p>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
         </div>
+
+        {/* Right: Listing Container */}
+        <div className="list-container p-6 lg:h-full">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-primary">
+              {plots.length} Results
+            </h2>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-muted">Sort:</span>
+              <select className="appearance-none bg-transparent font-bold text-primary text-[13px] outline-none cursor-pointer">
+                <option>Newest</option>
+                <option>Price (Low to High)</option>
+                <option>Price (High to Low)</option>
+              </select>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="flex h-40 items-center justify-center">
+              <Spinner />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4 pb-20">
+              {plots.map(plot => (
+                <ListingCard key={plot.id} plot={plot} />
+              ))}
+            </div>
+          )}
+        </div>
+
       </div>
-    </motion.div>
+    </div>
   );
 };
 

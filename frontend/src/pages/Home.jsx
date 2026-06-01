@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import PropertyCard from '../components/features/PropertyCard';
+import ListingCard from '../components/features/ListingCard';
 import Spinner from '../components/ui/Spinner';
 import { Link } from 'react-router-dom';
 import { getPlots } from '../api/plotsApi';
@@ -204,15 +204,7 @@ const Home = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
               >
-                <PropertyCard
-                  price={plot.price}
-                  title={plot.title}
-                  location="Diwancheruvu, Rajahmundry"
-                  isNew={index < 2}
-                  area={plot.areaSqYds}
-                  facing={plot.facing}
-                  status={plot.isDroneVerified ? 'Drone Verified' : 'Verified Docs'}
-                />
+                <ListingCard plot={plot} />
               </motion.div>
             ))}
           </div>

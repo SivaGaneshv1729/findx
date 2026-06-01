@@ -1,25 +1,25 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @theme {
-  --color-primary: #1a1a1a;
-  --color-primary-soft: #333333;
-  --color-accent: #9A7E6F;
-  --color-accent-soft: #dcd3ce;
-  --color-vibrant-orange: #b48a66;
-  --color-vibrant-teal: #6b705c;
-  --color-ink: #1a1a1a;
+  --color-primary: #151717;
+  --color-primary-soft: #2a2d2d;
+  --color-accent: #151717;
+  --color-accent-soft: rgba(21, 23, 23, 0.05);
+  --color-vibrant-orange: #151717;
+  --color-vibrant-teal: #151717;
+  --color-ink: #151717;
   --color-muted: #737373;
-  --color-surface: #FDFBF7;
-  --color-surface-muted: #F3F0EB;
-  --color-line: #E5E5E5;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f7f7f7;
+  --color-line: #e6e6e6;
   
-  --font-display: 'Playfair Display', serif;
-  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-display: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
   
-  --shadow-soft: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-strong: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.08);
+  --shadow-strong: 0 20px 40px rgba(0, 0, 0, 0.12);
 
   --spacing-gutter: 24px;
   --max-width-container-max: 1280px;
@@ -29,9 +29,9 @@
 }
 
 :root {
-  --color-primary: #1a1a1a;
-  --color-accent: #9A7E6F;
-  --color-line: #E5E5E5;
+  --color-primary: #151717;
+  --color-accent: #151717;
+  --color-line: #e6e6e6;
 }
 
 
@@ -146,4 +146,62 @@ select {
   .container {
     padding-inline: 18px;
   }
+}
+
+/* Split View Utilities */
+.split-view {
+  @apply flex flex-col lg:flex-row w-full h-[calc(100vh-80px)] mt-20 overflow-hidden;
+}
+
+.map-container {
+  @apply w-full h-[50vh] lg:h-full lg:flex-1 relative z-0;
+}
+
+.list-container {
+  @apply w-full lg:w-[600px] xl:w-[700px] h-full overflow-y-auto bg-surface z-10 shadow-[-10px_0_30px_rgba(0,0,0,0.03)];
+}
+
+/* Custom Scrollbar for list container */
+.list-container::-webkit-scrollbar {
+  width: 6px;
+}
+.list-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+.list-container::-webkit-scrollbar-thumb {
+  background-color: var(--color-line);
+  border-radius: 10px;
+}
+
+/* Top Loading Line */
+.loading-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-vibrant-orange));
+  z-index: 100;
+  animation: load 2s infinite ease-in-out;
+  width: 100%;
+  transform-origin: left;
+}
+
+@keyframes load {
+  0% { transform: scaleX(0); opacity: 1; }
+  50% { transform: scaleX(1); transform-origin: left; }
+  50.1% { transform-origin: right; }
+  100% { transform: scaleX(0); transform-origin: right; opacity: 0; }
+}
+
+/* Filter dropdown styling */
+.filter-dropdown {
+  @apply appearance-none bg-white border border-line rounded-full px-5 py-2.5 pr-10 text-[13px] font-bold text-primary cursor-pointer outline-none transition-colors hover:border-accent focus:ring-2 focus:ring-accent/20;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%231a1a1a'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 14px;
+}
+
+.filter-button {
+  @apply inline-flex items-center gap-2 bg-white border border-line rounded-full px-5 py-2.5 text-[13px] font-bold text-primary cursor-pointer transition-colors hover:border-accent hover:bg-surface-muted active:scale-95;
 }

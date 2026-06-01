@@ -12,6 +12,9 @@ import MapPage from './pages/Map';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Agents from './pages/Agents';
+import Join from './pages/Join';
+import About from './pages/About';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +28,18 @@ const router = createBrowserRouter([
       {
         path: "map",
         element: <MapPage />,
+      },
+      {
+        path: "agents",
+        element: <Agents />,
+      },
+      {
+        path: "join",
+        element: <Join />,
+      },
+      {
+        path: "about",
+        element: <About />,
       },
       {
         path: "contact",
