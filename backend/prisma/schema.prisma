@@ -1,0 +1,363 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  AGENT
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ProjectType {
+  PLOTS
+  FARMLAND
+  VILLAS
+  COMMERCIAL
+}
+
+enum ProjectStatus {
+  ACTIVE
+  COMPLETED
+  UPCOMING
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  BOOKED
+  SOLD
+  BLOCKED
+}
+
+enum Facing {
+  NORTH
+  SOUTH
+  EAST
+  WEST
+  NE
+  NW
+  SE
+  SW
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  BROCHURE
+  LAYOUT_MAP
+  DOCUMENT
+}
+
+enum NearbyPlaceType {
+  HIGHWAY
+  AIRPORT
+  COLLEGE
+  HOSPITAL
+  TEMPLE
+  BUS_STAND
+}
+
+enum LeadSource {
+  WEBSITE
+  FACEBOOK
+  GOOGLE
+  INSTAGRAM
+  REFERENCE
+  WALKIN
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  SITE_VISIT
+  NEGOTIATION
+  BOOKED
+  LOST
+}
+
+enum ActivityType {
+  CALL
+  WHATSAPP
+  MEETING
+  EMAIL
+  SITE_VISIT
+}
+
+enum VisitStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+model Organization {
+  id         String    @id @default(uuid()) @db.Uuid
+  name       String    @db.VarChar(150)
+  logoUrl    String?   @map("logo_url")
+  phone      String?   @db.VarChar(20)
+  email      String?   @db.VarChar(150)
+  address    String?
+  city       String?   @db.VarChar(100)
+  state      String?   @db.VarChar(100)
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  users      User[]
+  projects   Project[]
+
+  @@map("organizations")
+}
+
+model User {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  name           String       @db.VarChar(120)
+  email          String       @unique @db.VarChar(150)
+  phone          String?      @db.VarChar(20)
+  passwordHash   String       @map("password_hash")
+  role           UserRole     @default(AGENT)
+  profileImage   String?      @map("profile_image")
+  status         UserStatus   @default(ACTIVE)
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  assignedProperties Property[]
+  leads              Lead[]
+  leadActivities     LeadActivity[]
+  siteVisits         SiteVisit[]
+
+  @@map("users")
+}
+
+model Project {
+  id             String        @id @default(uuid()) @db.Uuid
+  organizationId String        @map("organization_id") @db.Uuid
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  name           String        @db.VarChar(200)
+  slug           String        @unique @db.VarChar(200)
+  description    String?
+  projectType    ProjectType   @map("project_type")
+  status         ProjectStatus @default(UPCOMING)
+  thumbnailUrl   String?       @map("thumbnail_url")
+  latitude       Decimal?      @db.Decimal
+  longitude      Decimal?      @db.Decimal
+  address        String?
+  village        String?       @db.VarChar(100)
+  mandal         String?       @db.VarChar(100)
+  district       String?       @db.VarChar(100)
+  state          String?       @db.VarChar(100)
+  pincode        String?       @db.VarChar(10)
+  totalLandAcres Decimal?      @map("total_land_acres") @db.Decimal
+  totalPlots     Int?          @map("total_plots")
+  launchDate     DateTime?     @map("launch_date") @db.Date
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  properties     Property[]
+  nearbyPlaces   NearbyPlace[]
+
+  @@map("projects")
+}
+
+model Property {
+  id                    String              @id @default(uuid()) @db.Uuid
+  projectId             String              @map("project_id") @db.Uuid
+  project               Project             @relation(fields: [projectId], references: [id])
+  assignedAgentId       String?             @map("assigned_agent_id") @db.Uuid
+  assignedAgent         User?               @relation(fields: [assignedAgentId], references: [id])
+  propertyCode          String?             @map("property_code") @db.VarChar(50)
+  title                 String              @db.VarChar(200)
+  plotNumber            String?             @map("plot_number") @db.VarChar(50)
+  surveyNumber          String?             @map("survey_number") @db.VarChar(100)
+  description           String?
+  status                PropertyStatus      @default(AVAILABLE)
+  areaSqft              Decimal?            @map("area_sqft") @db.Decimal
+  areaSqyd              Decimal?            @map("area_sqyd") @db.Decimal
+  areaAcres             Decimal?            @map("area_acres") @db.Decimal
+  facing                Facing?
+  roadWidthFt           Decimal?            @map("road_width_ft") @db.Decimal
+  cornerPlot            Boolean             @default(false) @map("corner_plot")
+  pricePerSqft          Decimal?            @map("price_per_sqft") @db.Decimal
+  totalPrice            Decimal?            @map("total_price") @db.Decimal
+  latitude              Decimal             @db.Decimal
+  longitude             Decimal             @db.Decimal
+  googleMapsLink        String?             @map("google_maps_link")
+  addressLine1          String?             @map("address_line_1") @db.VarChar(255)
+  addressLine2          String?             @map("address_line_2") @db.VarChar(255)
+  village               String?             @db.VarChar(100)
+  mandal                String?             @db.VarChar(100)
+  district              String?             @db.VarChar(100)
+  state                 String?             @db.VarChar(100)
+  pincode               String?             @db.VarChar(10)
+  landmark              String?             @db.VarChar(255)
+  distanceFromHighwayKm Decimal?            @map("distance_from_highway_km") @db.Decimal
+  distanceFromCityKm    Decimal?            @map("distance_from_city_km") @db.Decimal
+  approvalAuthority     String?             @map("approval_authority") @db.VarChar(150)
+  approvalNumber        String?             @map("approval_number") @db.VarChar(100)
+  registrationReady     Boolean             @default(false) @map("registration_ready")
+  createdAt             DateTime            @default(now()) @map("created_at")
+  updatedAt             DateTime            @updatedAt @map("updated_at")
+
+  coordinates           PlotCoordinate[]
+  media                 PropertyMedia[]
+  visibility            PropertyVisibility?
+  amenities             PropertyAmenity[]
+  leads                 Lead[]
+  siteVisits            SiteVisit[]
+  bookings              Booking[]
+
+  @@map("properties")
+}
+
+model PlotCoordinate {
+  id         String   @id @default(uuid()) @db.Uuid
+  propertyId String   @map("property_id") @db.Uuid
+  property   Property @relation(fields: [propertyId], references: [id])
+  pointOrder Int      @map("point_order")
+  latitude   Decimal  @db.Decimal
+  longitude  Decimal  @db.Decimal
+
+  @@map("plot_coordinates")
+}
+
+model PropertyMedia {
+  id         String    @id @default(uuid()) @db.Uuid
+  propertyId String    @map("property_id") @db.Uuid
+  property   Property  @relation(fields: [propertyId], references: [id])
+  mediaType  MediaType @map("media_type")
+  fileUrl    String    @map("file_url")
+  sortOrder  Int?      @map("sort_order")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  @@map("property_media")
+}
+
+model Amenity {
+  id                String            @id @default(uuid()) @db.Uuid
+  name              String            @db.VarChar(100)
+  icon              String?
+  propertyAmenities PropertyAmenity[]
+
+  @@map("amenities")
+}
+
+model PropertyAmenity {
+  id         String   @id @default(uuid()) @db.Uuid
+  propertyId String   @map("property_id") @db.Uuid
+  property   Property @relation(fields: [propertyId], references: [id])
+  amenityId  String   @map("amenity_id") @db.Uuid
+  amenity    Amenity  @relation(fields: [amenityId], references: [id])
+
+  @@map("property_amenities")
+}
+
+model PropertyVisibility {
+  id                  String   @id @default(uuid()) @db.Uuid
+  propertyId          String   @unique @map("property_id") @db.Uuid
+  property            Property @relation(fields: [propertyId], references: [id])
+  showPrice           Boolean  @default(true) @map("show_price")
+  showArea            Boolean  @default(true) @map("show_area")
+  showLocation        Boolean  @default(true) @map("show_location")
+  showGallery         Boolean  @default(true) @map("show_gallery")
+  showMap             Boolean  @default(true) @map("show_map")
+  showBrochure        Boolean  @default(true) @map("show_brochure")
+  showAgentContact    Boolean  @default(true) @map("show_agent_contact")
+  showApprovalDetails Boolean  @default(true) @map("show_approval_details")
+
+  @@map("property_visibility")
+}
+
+model NearbyPlace {
+  id         String          @id @default(uuid()) @db.Uuid
+  projectId  String          @map("project_id") @db.Uuid
+  project    Project         @relation(fields: [projectId], references: [id])
+  name       String          @db.VarChar(150)
+  type       NearbyPlaceType
+  distanceKm Decimal         @map("distance_km") @db.Decimal
+
+  @@map("nearby_places")
+}
+
+model Lead {
+  id                 String         @id @default(uuid()) @db.Uuid
+  propertyId         String?        @map("property_id") @db.Uuid
+  property           Property?      @relation(fields: [propertyId], references: [id])
+  agentId            String?        @map("agent_id") @db.Uuid
+  agent              User?          @relation(fields: [agentId], references: [id])
+  name               String         @db.VarChar(120)
+  phone              String         @db.VarChar(20)
+  email              String?        @db.VarChar(150)
+  source             LeadSource     @default(WEBSITE)
+  budget             Decimal?       @db.Decimal
+  interestedAreaSqyd Decimal?       @map("interested_area_sqyd") @db.Decimal
+  status             LeadStatus     @default(NEW)
+  notes              String?
+  nextFollowup       DateTime?      @map("next_followup")
+  createdAt          DateTime       @default(now()) @map("created_at")
+
+  activities LeadActivity[]
+  siteVisits SiteVisit[]
+  bookings   Booking[]
+
+  @@map("leads")
+}
+
+model LeadActivity {
+  id           String       @id @default(uuid()) @db.Uuid
+  leadId       String       @map("lead_id") @db.Uuid
+  lead         Lead         @relation(fields: [leadId], references: [id])
+  agentId      String       @map("agent_id") @db.Uuid
+  agent        User         @relation(fields: [agentId], references: [id])
+  activityType ActivityType @map("activity_type")
+  notes        String?
+  nextFollowup DateTime?    @map("next_followup")
+  createdAt    DateTime     @default(now()) @map("created_at")
+
+  @@map("lead_activities")
+}
+
+model SiteVisit {
+  id         String      @id @default(uuid()) @db.Uuid
+  leadId     String      @map("lead_id") @db.Uuid
+  lead       Lead        @relation(fields: [leadId], references: [id])
+  propertyId String      @map("property_id") @db.Uuid
+  property   Property    @relation(fields: [propertyId], references: [id])
+  agentId    String      @map("agent_id") @db.Uuid
+  agent      User        @relation(fields: [agentId], references: [id])
+  visitDate  DateTime    @map("visit_date")
+  status     VisitStatus @default(SCHEDULED)
+  remarks    String?
+
+  @@map("site_visits")
+}
+
+model Booking {
+  id            String        @id @default(uuid()) @db.Uuid
+  propertyId    String        @map("property_id") @db.Uuid
+  property      Property      @relation(fields: [propertyId], references: [id])
+  leadId        String        @map("lead_id") @db.Uuid
+  lead          Lead          @relation(fields: [leadId], references: [id])
+  bookingAmount Decimal       @map("booking_amount") @db.Decimal
+  bookingDate   DateTime      @map("booking_date") @db.Date
+  status        BookingStatus @default(PENDING)
+  notes         String?
+
+  @@map("bookings")
+}
