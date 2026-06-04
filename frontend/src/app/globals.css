@@ -8,19 +8,117 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-primary);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --color-bg: #f1f1f1;
+  --color-text: #151717;
+  --color-muted: #b3b3b3;
+}
+
+html {
+  font-size: 2.6666666667vw;
+  scroll-behavior: smooth;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 0.5208333333vw;
+  }
+}
+
+@media (min-width: 1920px) {
+  html {
+    font-size: 10px;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-primary), Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.font-secondary {
+  font-family: var(--font-secondary), "Times New Roman", serif;
+}
+
+.find-button-text {
+  overflow: hidden;
+}
+
+.find-button-text span {
+  position: relative;
+  display: block;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.find-button-text span::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 105%;
+  left: 0;
+  right: 0;
+}
+
+@media (pointer: fine) {
+  .find-button:hover .find-button-text span {
+    transform: translateY(-105%);
+  }
+
+  .find-nav-link:hover span {
+    transform: translateY(-105%);
+  }
+}
+
+.find-nav-link {
+  overflow: hidden;
+}
+
+.find-nav-link span {
+  position: relative;
+  display: block;
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.find-nav-link span::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 105%;
+  left: 0;
+  right: 0;
+}
+
+.find-fade-up {
+  animation: findFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.find-fade-delay-1 {
+  animation-delay: 0.1s;
+}
+
+.find-fade-delay-2 {
+  animation-delay: 0.2s;
+}
+
+.find-fade-delay-3 {
+  animation-delay: 0.3s;
+}
+
+@keyframes findFadeUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 3rem, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
