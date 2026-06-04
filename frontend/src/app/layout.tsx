@@ -2,7 +2,7 @@
 
 import { useAuth, AuthProvider } from '@/components/auth/AuthContext';
 import { usePathname, useRouter } from 'next/navigation';
-import { Inter } from "next/font/google";
+import { Instrument_Sans, Lora } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { 
@@ -22,7 +22,15 @@ import {
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
-const inter = Inter({ subsets: ["latin"] });
+const instrumentSans = Instrument_Sans({
+  subsets: ['latin'],
+  variable: '--font-primary',
+});
+
+const lora = Lora({
+  subsets: ['latin'],
+  variable: '--font-secondary',
+});
 
 function NavigationContent({ children }: { children: React.ReactNode }) {
   const { user, logout, isLoading } = useAuth();
@@ -208,7 +216,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${instrumentSans.variable} ${instrumentSans.className} ${lora.variable}`}>
         <AuthProvider>
           <NavigationContent>{children}</NavigationContent>
         </AuthProvider>
