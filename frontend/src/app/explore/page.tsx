@@ -1,198 +1,291 @@
 'use client';
 
-import React, { useState } from 'react';
-import { MapPin, Search, Filter, Info, Phone, MessageSquare, ChevronRight } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
+import {
+  CalendarDays,
+  ChevronDown,
+  Search,
+  Send,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-const mockPlots = [
-  { id: '1', code: 'GV-101', title: 'East Facing Residential', area: '150 SqYd', price: '₹45 L', status: 'AVAILABLE', pos: [17.385, 78.4867] },
-  { id: '2', code: 'GV-102', title: 'Corner Premium Plot', area: '200 SqYd', price: '₹65 L', status: 'AVAILABLE', pos: [17.386, 78.4877] },
-  { id: '3', code: 'GV-105', title: 'Commercial Frontage', area: '300 SqYd', price: '₹1.2 Cr', status: 'BOOKED', pos: [17.384, 78.4857] },
-  { id: '4', code: 'GV-108', title: 'North Facing Plot', area: '180 SqYd', price: '₹52 L', status: 'AVAILABLE', pos: [17.387, 78.4887] },
+type Listing = {
+  id: string;
+  price: string;
+  category: string;
+  status: string;
+  beds: string;
+  baths: string;
+  area: string;
+  address: string;
+  image: string;
+};
+
+const listings: Listing[] = [
+  {
+    id: '1',
+    price: '$349,900',
+    category: 'House',
+    status: 'For Sale',
+    beds: '3 bds',
+    baths: '2 ba',
+    area: '1050 sqft',
+    address: '211 State Route 28N',
+    image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    id: '2',
+    price: '$2,188,600',
+    category: 'House',
+    status: 'For Sale',
+    beds: '4 bds',
+    baths: '4.5 ba',
+    area: '3018 sqft',
+    address: '182 NY-9P',
+    image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    id: '3',
+    price: '$479,000',
+    category: 'House',
+    status: 'For Sale',
+    beds: '4 bds',
+    baths: '2.5 ba',
+    area: '2180 sqft',
+    address: '3174 E LYDIUS Street',
+    image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    id: '4',
+    price: '$7,500',
+    category: 'House',
+    status: 'For Sale',
+    beds: '32 bds',
+    baths: '1 ba',
+    area: '1000000 sqft',
+    address: '1 test Alley',
+    image: '/Screenshot 2026-06-04 171617.png',
+  },
+  {
+    id: '5',
+    price: '$684,000',
+    category: 'House',
+    status: 'For Sale',
+    beds: '5 bds',
+    baths: '3 ba',
+    area: '2640 sqft',
+    address: '71 Hickory Lane',
+    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80',
+  },
+  {
+    id: '6',
+    price: '$215,000',
+    category: 'Apartment',
+    status: 'For Sale',
+    beds: '1 bds',
+    baths: '1 ba',
+    area: '720 sqft',
+    address: '42 Maple Court',
+    image: 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80',
+  },
 ];
 
+const filters = ['Neighborhoods', 'For Sale', 'Price', 'Residential', 'Beds & Baths'];
+
 export default function ExplorePage() {
-  const [selectedPlot, setSelectedPlot] = useState<any>(null);
+  const [query, setQuery] = useState('');
+  const [view, setView] = useState<'map' | 'list'>('map');
+
+  const filteredListings = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return listings;
+    return listings.filter((listing) =>
+      `${listing.address} ${listing.category}`.toLowerCase().includes(normalized)
+    );
+  }, [query]);
 
   return (
-    <div className="flex flex-col h-screen bg-white">
-      {/* Public Header */}
-      <header className="h-16 border-b flex items-center justify-between px-6 shrink-0 bg-white z-20">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">P</div>
-          <span className="text-xl font-black text-slate-900 tracking-tight">PlotFlow <span className="text-blue-600">Explore</span></span>
-        </div>
-        <div className="flex items-center space-x-4">
-          <Link href="/login" className="text-sm font-bold text-slate-600 hover:text-blue-600 transition">Partner Login</Link>
-          <button className="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-bold">Contact Sales</button>
+    <div className="min-h-screen bg-white text-[#151717]">
+      <header className="border-b border-[#ececec]">
+        <div className="mx-auto flex h-[7.6rem] max-w-[192rem] items-center justify-between px-[2.2rem] md:px-[3rem]">
+          <Link href="/" className="text-[3.2rem] font-black tracking-[-0.08em] text-[#151717]">
+            FIND
+          </Link>
+
+          <nav className="hidden items-center gap-[3.4rem] text-[1.6rem] font-medium md:flex">
+            <TopLink href="/explore" label="Search" />
+            <TopLink href="/agents" label="Agents" />
+            <TopLink href="/join" label="Join" dropdown />
+            <TopLink href="/paperwork" label="Paperwork" dropdown />
+            <TopLink href="/resources" label="Resources" dropdown />
+            <TopLink href="/about" label="About" dropdown />
+          </nav>
+
+          <Link
+            href="/login"
+            className="rounded-full bg-[#151717] px-[2.8rem] py-[1.5rem] text-[1.4rem] font-medium text-white"
+          >
+            Sign In
+          </Link>
         </div>
       </header>
 
-      {/* Main View: Map + Sidebar */}
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left: Interactive Map Placeholder */}
-        <div className="flex-1 relative bg-slate-100 flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 opacity-20 pointer-events-none">
-            {/* Mock Grid for map feel */}
-            <div className="w-full h-full" style={{ backgroundImage: 'radial-gradient(#94a3b8 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
-          </div>
-          
-          <div className="z-10 text-center p-8 bg-white/80 backdrop-blur-md rounded-2xl border border-slate-200 shadow-xl max-w-md">
-            <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <MapPin size={32} />
-            </div>
-            <h2 className="text-xl font-bold text-slate-900 mb-2">Interactive Project Map</h2>
-            <p className="text-slate-600 text-sm mb-6 leading-relaxed">
-              Click on a plot to view dimensions, facing, and availability. 
-              (Leaflet Map integration pending API keys)
-            </p>
-            <div className="flex flex-wrap justify-center gap-2">
-               {mockPlots.map(plot => (
-                 <button 
-                  key={plot.id}
-                  onClick={() => setSelectedPlot(plot)}
-                  className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center text-[10px] font-bold transition-all ${
-                    selectedPlot?.id === plot.id ? "bg-blue-600 border-blue-700 text-white scale-110 shadow-lg" : "bg-white border-slate-200 text-slate-400 hover:border-blue-400"
-                  }`}
-                 >
-                   {plot.code}
-                 </button>
-               ))}
-            </div>
-          </div>
-
-          {/* Map Controls */}
-          <div className="absolute top-4 left-4 flex flex-col space-y-2">
-            <div className="bg-white p-2 rounded-lg shadow-md border flex flex-col space-y-2">
-               <button className="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded text-slate-600">+</button>
-               <div className="h-px bg-slate-100"></div>
-               <button className="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded text-slate-600">-</button>
-            </div>
-          </div>
-
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-full shadow-lg border flex items-center space-x-4 text-xs font-bold">
-            <div className="flex items-center space-x-1"><div className="w-3 h-3 bg-green-500 rounded-sm"></div><span>Available</span></div>
-            <div className="flex items-center space-x-1"><div className="w-3 h-3 bg-yellow-500 rounded-sm"></div><span>Booked</span></div>
-            <div className="flex items-center space-x-1"><div className="w-3 h-3 bg-slate-300 rounded-sm"></div><span>Sold</span></div>
-          </div>
-        </div>
-
-        {/* Right: Info Sidebar */}
-        <aside className="w-96 border-l bg-slate-50 flex flex-col shrink-0 overflow-y-auto">
-          <div className="p-6 bg-white border-b sticky top-0 z-10">
-            <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-              <input 
-                type="text" 
-                placeholder="Search plot number..." 
-                className="w-full pl-10 pr-4 py-2 bg-slate-100 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500 transition"
+      <div className="mx-auto max-w-[192rem] px-[2.2rem] pt-[1.4rem] md:px-[2.2rem]">
+        <div className="grid gap-[2.2rem] xl:grid-cols-[48.5%_51.5%]">
+          <section>
+            <div className="mb-[1.8rem] flex items-center justify-between border-b border-[#d9d9d9] pb-[1.4rem]">
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Enter property address"
+                className="w-full bg-transparent text-[1.6rem] outline-none placeholder:text-[#151717]"
               />
+              <Search size={20} className="shrink-0 text-[#151717]" />
             </div>
-            <div className="flex space-x-2 overflow-x-auto pb-2 custom-scrollbar">
-              <FilterTag label="All Plots" active />
-              <FilterTag label="Residential" />
-              <FilterTag label="Commercial" />
-              <FilterTag label="East Facing" />
+
+            <div className="relative h-[75rem] overflow-hidden bg-[#8dd6ef]">
+              <div className="absolute inset-0 opacity-25">
+                <div
+                  className="h-full w-full"
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)',
+                    backgroundSize: '18rem 18rem',
+                  }}
+                />
+              </div>
+
+              <div className="absolute inset-[5rem] opacity-20">
+                <div
+                  className="h-full w-full"
+                  style={{
+                    backgroundImage:
+                      'linear-gradient(rgba(255,255,255,0.55) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.55) 1px, transparent 1px)',
+                    backgroundSize: '19rem 19rem',
+                  }}
+                />
+              </div>
+
+              <div className="absolute bottom-[1.2rem] right-[1.2rem] flex flex-col overflow-hidden border border-[#d8d8d8] bg-white">
+                <button className="flex h-[4rem] w-[4rem] items-center justify-center text-[2.4rem] text-[#777]">+</button>
+                <div className="h-px bg-[#e5e5e5]" />
+                <button className="flex h-[4rem] w-[4rem] items-center justify-center text-[2.4rem] text-[#777]">-</button>
+              </div>
+
+              <div className="absolute bottom-[0.2rem] left-[0.8rem] text-[1.2rem] text-[#555]">Google</div>
             </div>
-          </div>
+          </section>
 
-          <div className="p-6 space-y-4">
-            {selectedPlot ? (
-              <div className="animate-in slide-in-from-right duration-300">
-                <div className="bg-white rounded-2xl border border-blue-200 p-6 shadow-lg shadow-blue-50">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-2xl font-black text-slate-900">{selectedPlot.code}</h3>
-                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                      selectedPlot.status === 'AVAILABLE' ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
-                    }`}>
-                      {selectedPlot.status}
-                    </span>
-                  </div>
-                  <h4 className="text-lg font-bold text-slate-700 mb-6">{selectedPlot.title}</h4>
-                  
-                  <div className="grid grid-cols-2 gap-4 mb-8">
-                    <PlotDetail label="Plot Area" value={selectedPlot.area} />
-                    <PlotDetail label="Pricing" value={selectedPlot.price} />
-                    <PlotDetail label="Facing" value="East" />
-                    <PlotDetail label="Road Width" value="40 Ft" />
-                  </div>
-
-                  <div className="space-y-3">
-                    <button className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl flex items-center justify-center space-x-2 hover:bg-blue-700 transition shadow-lg shadow-blue-200">
-                      <MessageSquare size={18} />
-                      <span>Enquire via WhatsApp</span>
-                    </button>
-                    <button className="w-full bg-slate-900 text-white font-bold py-4 rounded-xl flex items-center justify-center space-x-2 hover:bg-slate-800 transition">
-                      <Phone size={18} />
-                      <span>Request Callback</span>
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="mt-6 p-4 bg-blue-50 rounded-xl flex items-start space-x-3 text-blue-700">
-                  <Info size={20} className="shrink-0" />
-                  <p className="text-xs font-medium leading-relaxed">
-                    This plot is DTCP approved and ready for registration. Contact our agent for a personalized site visit.
-                  </p>
-                </div>
+          <section className="pb-[2rem]">
+            <div className="mb-[2rem] flex flex-wrap items-center justify-between gap-[1.2rem]">
+              <div className="flex flex-wrap gap-[0.8rem]">
+                {filters.map((filter) => (
+                  <button
+                    key={filter}
+                    className="inline-flex h-[4.4rem] items-center gap-[1rem] border border-[#dddddd] px-[1.6rem] text-[1.4rem] font-medium text-[#151717]"
+                  >
+                    {filter}
+                    <ChevronDown size={15} />
+                  </button>
+                ))}
               </div>
-            ) : (
-              <div className="text-center py-20">
-                <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
-                  <MapPin size={32} />
-                </div>
-                <p className="text-slate-500 font-bold">Select a plot on the map to view details</p>
-                <p className="text-slate-400 text-xs mt-2">Browse Green Valley Phase I inventory</p>
-              </div>
-            )}
 
-            <div className="pt-8">
-              <h5 className="text-sm font-black text-slate-900 uppercase tracking-widest mb-4">Nearby Highlights</h5>
-              <div className="space-y-3">
-                 <NearbyItem label="Highway" dist="1.2 km" />
-                 <NearbyItem label="Airport" dist="45 km" />
-                 <NearbyItem label="School" dist="0.5 km" />
+              <div className="flex overflow-hidden border border-[#dddddd]">
+                <button
+                  onClick={() => setView('map')}
+                  className={cn(
+                    'h-[4.4rem] px-[2rem] text-[1.4rem] font-medium',
+                    view === 'map' ? 'bg-[#151717] text-white' : 'bg-white text-[#151717]'
+                  )}
+                >
+                  Map
+                </button>
+                <button
+                  onClick={() => setView('list')}
+                  className={cn(
+                    'h-[4.4rem] px-[2rem] text-[1.4rem] font-medium',
+                    view === 'list' ? 'bg-[#151717] text-white' : 'bg-white text-[#151717]'
+                  )}
+                >
+                  List
+                </button>
               </div>
             </div>
-          </div>
-        </aside>
+
+            <div className="mb-[1.6rem] flex items-center justify-between">
+              <p className="text-[1.6rem] font-medium">{15140 + filteredListings.length - listings.length} Results</p>
+              <div className="flex items-center gap-[0.8rem] text-[1.4rem]">
+                <span>Sort:</span>
+                <button className="inline-flex items-center gap-[0.6rem] font-medium text-[#0a84ff]">
+                  Newest
+                  <ChevronDown size={14} />
+                </button>
+              </div>
+            </div>
+
+            <div className="grid gap-x-[1.8rem] gap-y-[2.6rem] md:grid-cols-2">
+              {filteredListings.map((listing) => (
+                <article key={listing.id}>
+                  <div className="aspect-[1.52/1] overflow-hidden bg-[#f3f3f3]">
+                    <img src={listing.image} alt={listing.address} className="h-full w-full object-cover" />
+                  </div>
+
+                  <div className="pt-[1rem]">
+                    <p className="text-[2rem] font-semibold tracking-[-0.03em] text-[#151717]">{listing.price}</p>
+                    <p className="mt-[0.8rem] text-[1.4rem] text-[#151717]">
+                      {listing.category}
+                      <span className="mx-[0.7rem] text-[#999]">•</span>
+                      {listing.status}
+                      <span className="mx-[0.7rem] text-[#999]">•</span>
+                      {listing.beds}
+                      <span className="mx-[0.7rem] text-[#999]">•</span>
+                      {listing.baths}
+                      <span className="mx-[0.7rem] text-[#999]">•</span>
+                      {listing.area}
+                    </p>
+                    <p className="mt-[0.7rem] text-[1.4rem] text-[#151717]">{listing.address}</p>
+
+                    <div className="mt-[1.4rem] flex items-center gap-[1rem]">
+                      <CircleIcon>
+                        <CalendarDays size={17} strokeWidth={1.8} />
+                      </CircleIcon>
+                      <CircleIcon>
+                        <Send size={17} strokeWidth={1.8} />
+                      </CircleIcon>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );
 }
 
-function FilterTag({ label, active }: { label: string; active?: boolean }) {
+function TopLink({
+  href,
+  label,
+  dropdown,
+}: {
+  href: string;
+  label: string;
+  dropdown?: boolean;
+}) {
   return (
-    <button className={cn(
-      "whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-bold border transition",
-      active ? "bg-blue-600 border-blue-700 text-white shadow-md shadow-blue-100" : "bg-white border-slate-200 text-slate-600 hover:border-slate-300"
-    )}>
-      {label}
+    <Link href={href} className="inline-flex items-center gap-[0.6rem] text-[#151717]">
+      <span>{label}</span>
+      {dropdown ? <ChevronDown size={14} /> : null}
+    </Link>
+  );
+}
+
+function CircleIcon({ children }: { children: React.ReactNode }) {
+  return (
+    <button className="flex h-[4rem] w-[4rem] items-center justify-center rounded-full border border-[#bdbdbd] text-[#151717]">
+      {children}
     </button>
   );
-}
-
-function PlotDetail({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-      <p className="text-[10px] text-slate-400 font-black uppercase tracking-tighter mb-1">{label}</p>
-      <p className="text-sm font-bold text-slate-900">{value}</p>
-    </div>
-  );
-}
-
-function NearbyItem({ label, dist }: { label: string; dist: string }) {
-  return (
-    <div className="flex items-center justify-between p-3 bg-white border rounded-xl hover:shadow-sm transition cursor-default">
-      <span className="text-xs font-bold text-slate-700">{label}</span>
-      <div className="flex items-center text-blue-600 font-bold text-xs">
-        {dist}
-        <ChevronRight size={14} className="ml-1" />
-      </div>
-    </div>
-  );
-}
-
-function cn(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
 }
