@@ -1,8 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   ArrowRight,
   Check,
@@ -11,16 +10,15 @@ import {
   Home,
   Instagram,
   MapPin,
-  Menu,
   Phone,
   Search,
   Star,
   TrendingUp,
   Users,
-  X,
   Youtube,
   Linkedin,
 } from 'lucide-react';
+import Navbar from '@/components/Navbar';
 import { cn } from '@/lib/utils';
 
 const trustStats = [
@@ -129,67 +127,9 @@ const blogPosts = [
 ];
 
 export default function HomePage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
   return (
     <div className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)]">
-      <nav
-        className={cn(
-          'fixed inset-x-0 top-0 z-50 transition-all duration-300',
-          scrolled
-            ? 'border-b border-black/10 bg-[#f1f1f1]/95 backdrop-blur'
-            : 'bg-transparent'
-        )}
-      >
-        <div className="mx-auto flex h-[8rem] max-w-[192rem] items-center justify-between px-[2.5rem] md:px-[10rem]">
-          <Link href="/" className="text-[2.4rem] font-semibold tracking-[0.24em] text-[#151717]">
-            PLOTFLOW
-          </Link>
-
-          <div className="hidden items-center gap-[3rem] text-[1.8rem] font-medium text-[#151717] md:flex">
-            <HeaderLink href="/explore">Search</HeaderLink>
-            <HeaderLink href="/agents">Agents</HeaderLink>
-            <HeaderLink href="/join">Join</HeaderLink>
-            <HeaderLink href="/dashboard">Dashboard</HeaderLink>
-            <HeaderLink href="/login">Sign In</HeaderLink>
-          </div>
-
-          <button
-            onClick={() => setIsMenuOpen((open) => !open)}
-            className="rounded-full border border-black/10 bg-white/80 p-3 text-[#151717] md:hidden"
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
-        </div>
-
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              className="border-t border-black/10 bg-[#f1f1f1] px-5 py-6 md:hidden"
-            >
-              <div className="flex flex-col gap-5 text-[2rem] text-[#151717]">
-                <HeaderLink href="/explore">Search</HeaderLink>
-                <HeaderLink href="/agents">Agents</HeaderLink>
-                <HeaderLink href="/join">Join</HeaderLink>
-                <HeaderLink href="/dashboard">Dashboard</HeaderLink>
-                <HeaderLink href="/login">Sign In</HeaderLink>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
+      <Navbar />
 
       <main>
         <section className="relative overflow-hidden px-[2.5rem] pb-[8rem] pt-[13rem] md:px-[10rem] md:pb-[14rem] md:pt-[18rem]">
@@ -262,20 +202,33 @@ export default function HomePage() {
               </div>
 
               <div className="absolute -bottom-[2rem] left-[1rem] right-[1rem] border border-black/10 bg-white p-[1rem] shadow-[0_1rem_4rem_rgba(21,23,23,0.08)] md:left-[4rem] md:right-[4rem]">
-                <div className="flex flex-col gap-[1rem] md:flex-row">
+                <form 
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.currentTarget);
+                    const query = formData.get('search');
+                    window.location.href = `/explore?search=${query}`;
+                  }}
+                  className="flex flex-col gap-[1rem] md:flex-row"
+                >
                   <div className="flex flex-1 items-center gap-[1.2rem] border border-black/10 bg-[#f6f6f6] px-[2rem] py-[1.8rem]">
                     <Search size={18} className="text-[#8d8d8d]" />
-                    <span className="text-[1.6rem] text-[#6b6b6b]">City, locality, or property type</span>
+                    <input 
+                      name="search"
+                      type="text"
+                      placeholder="City, locality, or property type"
+                      className="w-full bg-transparent text-[1.6rem] text-[#151717] outline-none placeholder:text-[#6b6b6b]"
+                    />
                   </div>
-                  <Link
-                    href="/explore"
-                    className="find-button inline-flex items-center justify-center rounded-full bg-[#151717] px-[2.4rem] py-[1.6rem] text-[1.6rem] font-medium text-white"
+                  <button
+                    type="submit"
+                    className="find-button inline-flex items-center justify-center rounded-full bg-[#151717] px-[2.4rem] py-[1.6rem] text-[1.6rem] font-medium text-white transition hover:scale-[1.02]"
                   >
                     <span className="find-button-text">
                       <span data-text="Start Your Search">Start Your Search</span>
                     </span>
-                  </Link>
-                </div>
+                  </button>
+                </form>
               </div>
             </div>
           </div>
@@ -609,14 +562,6 @@ export default function HomePage() {
         </section>
       </main>
     </div>
-  );
-}
-
-function HeaderLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <Link href={href} className="find-nav-link transition hover:text-[#151717]">
-      <span data-text={String(children)}>{children}</span>
-    </Link>
   );
 }
 
