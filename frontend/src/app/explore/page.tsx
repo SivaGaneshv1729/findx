@@ -8,7 +8,18 @@ import {
   Search,
   Send,
 } from 'lucide-react';
+import Navbar from '@/components/Navbar';
 import { cn } from '@/lib/utils';
+import dynamic from 'next/dynamic';
+
+const PropertyMap = dynamic(() => import('@/components/PropertyMap'), { 
+  ssr: false,
+  loading: () => (
+    <div className="h-full w-full bg-[#f8f8f8] flex items-center justify-center">
+      <div className="text-[1.4rem] text-gray-400 animate-pulse uppercase tracking-[0.2em]">Loading Map...</div>
+    </div>
+  )
+});
 
 type Listing = {
   id: string;
@@ -20,6 +31,8 @@ type Listing = {
   area: string;
   address: string;
   image: string;
+  lat: number;
+  lng: number;
 };
 
 const listings: Listing[] = [
@@ -33,6 +46,8 @@ const listings: Listing[] = [
     area: '1050 sqft',
     address: '211 State Route 28N',
     image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1200&q=80',
+    lat: 43.1,
+    lng: -73.9,
   },
   {
     id: '2',
@@ -44,6 +59,8 @@ const listings: Listing[] = [
     area: '3018 sqft',
     address: '182 NY-9P',
     image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80',
+    lat: 43.0,
+    lng: -73.8,
   },
   {
     id: '3',
@@ -55,6 +72,8 @@ const listings: Listing[] = [
     area: '2180 sqft',
     address: '3174 E LYDIUS Street',
     image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1200&q=80',
+    lat: 42.9,
+    lng: -74.0,
   },
   {
     id: '4',
@@ -65,7 +84,9 @@ const listings: Listing[] = [
     baths: '1 ba',
     area: '1000000 sqft',
     address: '1 test Alley',
-    image: '/Screenshot 2026-06-04 171617.png',
+    image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80',
+    lat: 43.2,
+    lng: -73.7,
   },
   {
     id: '5',
@@ -77,6 +98,8 @@ const listings: Listing[] = [
     area: '2640 sqft',
     address: '71 Hickory Lane',
     image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80',
+    lat: 43.15,
+    lng: -73.85,
   },
   {
     id: '6',
@@ -88,6 +111,8 @@ const listings: Listing[] = [
     area: '720 sqft',
     address: '42 Maple Court',
     image: 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80',
+    lat: 42.85,
+    lng: -73.95,
   },
 ];
 
@@ -107,31 +132,9 @@ export default function ExplorePage() {
 
   return (
     <div className="min-h-screen bg-white text-[#151717]">
-      <header className="border-b border-[#ececec]">
-        <div className="mx-auto flex h-[7.6rem] max-w-[192rem] items-center justify-between px-[2.2rem] md:px-[3rem]">
-          <Link href="/" className="text-[3.2rem] font-black tracking-[-0.08em] text-[#151717]">
-            FIND
-          </Link>
+      <Navbar />
 
-          <nav className="hidden items-center gap-[3.4rem] text-[1.6rem] font-medium md:flex">
-            <TopLink href="/explore" label="Search" />
-            <TopLink href="/agents" label="Agents" />
-            <TopLink href="/join" label="Join" dropdown />
-            <TopLink href="/paperwork" label="Paperwork" dropdown />
-            <TopLink href="/resources" label="Resources" dropdown />
-            <TopLink href="/about" label="About" dropdown />
-          </nav>
-
-          <Link
-            href="/login"
-            className="rounded-full bg-[#151717] px-[2.8rem] py-[1.5rem] text-[1.4rem] font-medium text-white"
-          >
-            Sign In
-          </Link>
-        </div>
-      </header>
-
-      <div className="mx-auto max-w-[192rem] px-[2.2rem] pt-[1.4rem] md:px-[2.2rem]">
+      <div className="mx-auto max-w-[192rem] px-[2.2rem] pt-[10rem] md:px-[2.2rem]">
         <div className="grid gap-[2.2rem] xl:grid-cols-[48.5%_51.5%]">
           <section>
             <div className="mb-[1.8rem] flex items-center justify-between border-b border-[#d9d9d9] pb-[1.4rem]">
@@ -144,36 +147,8 @@ export default function ExplorePage() {
               <Search size={20} className="shrink-0 text-[#151717]" />
             </div>
 
-            <div className="relative h-[75rem] overflow-hidden bg-[#8dd6ef]">
-              <div className="absolute inset-0 opacity-25">
-                <div
-                  className="h-full w-full"
-                  style={{
-                    backgroundImage:
-                      'linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)',
-                    backgroundSize: '18rem 18rem',
-                  }}
-                />
-              </div>
-
-              <div className="absolute inset-[5rem] opacity-20">
-                <div
-                  className="h-full w-full"
-                  style={{
-                    backgroundImage:
-                      'linear-gradient(rgba(255,255,255,0.55) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.55) 1px, transparent 1px)',
-                    backgroundSize: '19rem 19rem',
-                  }}
-                />
-              </div>
-
-              <div className="absolute bottom-[1.2rem] right-[1.2rem] flex flex-col overflow-hidden border border-[#d8d8d8] bg-white">
-                <button className="flex h-[4rem] w-[4rem] items-center justify-center text-[2.4rem] text-[#777]">+</button>
-                <div className="h-px bg-[#e5e5e5]" />
-                <button className="flex h-[4rem] w-[4rem] items-center justify-center text-[2.4rem] text-[#777]">-</button>
-              </div>
-
-              <div className="absolute bottom-[0.2rem] left-[0.8rem] text-[1.2rem] text-[#555]">Google</div>
+            <div className="relative h-[75rem] overflow-hidden bg-[#f1f1f1] border border-gray-100">
+              <PropertyMap listings={filteredListings} />
             </div>
           </section>
 
@@ -226,10 +201,12 @@ export default function ExplorePage() {
 
             <div className="grid gap-x-[1.8rem] gap-y-[2.6rem] md:grid-cols-2">
               {filteredListings.map((listing) => (
-                <article key={listing.id}>
-                  <div className="aspect-[1.52/1] overflow-hidden bg-[#f3f3f3]">
-                    <img src={listing.image} alt={listing.address} className="h-full w-full object-cover" />
-                  </div>
+                <article key={listing.id} className="group">
+                  <Link href={`/properties/${listing.id}`}>
+                    <div className="aspect-[1.52/1] overflow-hidden bg-[#f3f3f3]">
+                      <img src={listing.image} alt={listing.address} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                    </div>
+                  </Link>
 
                   <div className="pt-[1rem]">
                     <p className="text-[2rem] font-semibold tracking-[-0.03em] text-[#151717]">{listing.price}</p>
@@ -262,23 +239,6 @@ export default function ExplorePage() {
         </div>
       </div>
     </div>
-  );
-}
-
-function TopLink({
-  href,
-  label,
-  dropdown,
-}: {
-  href: string;
-  label: string;
-  dropdown?: boolean;
-}) {
-  return (
-    <Link href={href} className="inline-flex items-center gap-[0.6rem] text-[#151717]">
-      <span>{label}</span>
-      {dropdown ? <ChevronDown size={14} /> : null}
-    </Link>
   );
 }
 
