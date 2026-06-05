@@ -26,6 +26,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
+  const handleUser = (supabaseUser: SupabaseUser) => {
+    const mappedUser: User = {
+      id: supabaseUser.id,
+      name: supabaseUser.user_metadata?.name || supabaseUser.email?.split('@')[0] || 'User',
+      email: supabaseUser.email || '',
+      role: (supabaseUser.user_metadata?.role as 'ADMIN' | 'AGENT') || 'AGENT',
+    };
+    setUser(mappedUser);
+  };
+
   useEffect(() => {
     // Check active sessions and sets the user
     const getSession = async () => {
@@ -55,16 +65,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return () => subscription.unsubscribe();
   }, []);
-
-  const handleUser = (supabaseUser: SupabaseUser) => {
-    const mappedUser: User = {
-      id: supabaseUser.id,
-      name: supabaseUser.user_metadata?.name || supabaseUser.email?.split('@')[0] || 'User',
-      email: supabaseUser.email || '',
-      role: (supabaseUser.user_metadata?.role as 'ADMIN' | 'AGENT') || 'AGENT',
-    };
-    setUser(mappedUser);
-  };
 
   const login = async (email: string, password?: string, role?: 'ADMIN' | 'AGENT') => {
     // Direct Access (Dev Mode) Logic
